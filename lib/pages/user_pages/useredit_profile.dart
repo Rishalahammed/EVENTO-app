@@ -16,6 +16,9 @@ class _EditProfileState extends State<EditProfile> {
   var editwhatsapp = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
+  // late PickedFile _imageFile;
+  // final ImagePicker _picker = ImagePicker();
+
   bool value = false;
   // Uint8List? _image;
   //
@@ -62,7 +65,7 @@ class _EditProfileState extends State<EditProfile> {
             //
             //******************* Image added to the top ********************
             Image.asset(
-              "assets/profile1.png",
+              "assets/images/profile1.png",
               fit: BoxFit.cover,
             ),
             //
@@ -111,28 +114,114 @@ class _EditProfileState extends State<EditProfile> {
                 //
                 //
                 //*************** Image holding container *****************
-                Container(
-                  height: 110,
-                  width: 110,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("assets/people.png"),
+                InkWell(
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 110,
+                    width: 110,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: AssetImage("assets/images/people.png"),
+                      ),
                     ),
                   ),
+                  //
+                  //
+                  //
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: ((builder) => Container(
+                            padding: EdgeInsets.all(20),
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            // color: Colors.red,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                //
+                                //
+                                //
+                                Text(
+                                  "Choose Profile Photo",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                //
+                                //
+                                //
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                //
+                                //
+                                //
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    //
+                                    //
+                                    //
+                                    InkWell(
+                                      onTap: () {
+                                        print("camera");
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.camera),
+                                          Text(
+                                            "Camera",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    //
+                                    //
+                                    //
+                                    InkWell(
+                                      onTap: () {
+                                        print("gallery");
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.image),
+                                          Text(
+                                            "Gallery",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    //
+                                    //
+                                    //
+                                  ],
+                                ),
+                              ],
+                            ),
+                          )),
+                    );
+                  },
                 ),
                 //
                 //
                 //
                 //*************** Icon added for profile picture update ****************
                 Positioned(
-                  top: 80,
-                  left: 105,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add_a_photo_outlined, size: 20),
-                  ),
+                  bottom: 5,
+                  right: -10,
+                  child: Icon(Icons.add_a_photo_outlined),
                 ),
                 //
                 //
@@ -176,11 +265,11 @@ class _EditProfileState extends State<EditProfile> {
                         // This optional block of code can be used to run
                         // code when the user saves the form.
                       },
-                      validator: (String? value) {
-                        return (value != null && value.contains('@'))
-                            ? 'Do not use the @ char.'
-                            : null;
-                      },
+                      // validator: (String? value) {
+                      //   return (value != null && value.contains('@'))
+                      //       ? 'Do not use the @ char.'
+                      //       : null;
+                      // },
                     ),
                     //
                     //
@@ -188,7 +277,7 @@ class _EditProfileState extends State<EditProfile> {
                     //
 
                     const SizedBox(
-                      height: 15,
+                      height: 50,
                     ),
                     //
                     //
@@ -227,57 +316,57 @@ class _EditProfileState extends State<EditProfile> {
                     //
                     //
                     //******************** Text field for mobile *****************
-                    TextFormField(
-                      controller: editmobile,
-                      decoration: const InputDecoration(
-                        labelText: 'Mobile',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(width: 1.5, color: Colors.blue),
-                        ),
-                      ),
-                      onSaved: (String? value) {
-                        // This optional block of code can be used to run
-                        // code when the user saves the form.
-                      },
-                      validator: (String? value) {
-                        return (value != null && value.contains('@'))
-                            ? 'Do not use the @ char.'
-                            : null;
-                      },
-                    ),
-                    //
-                    //
-                    //
-                    //
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    //
-                    //
-                    //
-                    //******************** Text field for Whatsapp ******************
-                    TextFormField(
-                      controller: editwhatsapp,
-                      decoration: const InputDecoration(
-                        labelText: 'Whatsapp',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(width: 1.5, color: Colors.blue),
-                        ),
-                      ),
-                      onSaved: (String? value) {
-                        // This optional block of code can be used to run
-                        // code when the user saves the form.
-                      },
-                      validator: (String? value) {
-                        return (value != null && value.contains('@'))
-                            ? 'Do not use the @ char.'
-                            : null;
-                      },
-                    ),
+                    // TextFormField(
+                    //   controller: edit mobile,
+                    //   decoration: const InputDecoration(
+                    //     labelText: 'Mobile',
+                    //     labelStyle: TextStyle(fontWeight: FontWeight.w600),
+                    //     focusedBorder: UnderlineInputBorder(
+                    //       borderSide:
+                    //           BorderSide(width: 1.5, color: Colors.blue),
+                    //     ),
+                    //   ),
+                    //   onSaved: (String? value) {
+                    //     // This optional block of code can be used to run
+                    //     // code when the user saves the form.
+                    //   },
+                    //   validator: (String? value) {
+                    //     return (value != null && value.contains('@'))
+                    //         ? 'Do not use the @ char.'
+                    //         : null;
+                    //   },
+                    // ),
+                    // //
+                    // //
+                    // //
+                    // //
+                    // const SizedBox(
+                    //   height: 15,
+                    // ),
+                    // //
+                    // //
+                    // //
+                    // //******************** Text field for Whatsapp ******************
+                    // TextFormField(
+                    //   controller: editwhatsapp,
+                    //   decoration: const InputDecoration(
+                    //     labelText: 'Whatsapp',
+                    //     labelStyle: TextStyle(fontWeight: FontWeight.w600),
+                    //     focusedBorder: UnderlineInputBorder(
+                    //       borderSide:
+                    //           BorderSide(width: 1.5, color: Colors.blue),
+                    //     ),
+                    //   ),
+                    //   onSaved: (String? value) {
+                    //     // This optional block of code can be used to run
+                    //     // code when the user saves the form.
+                    //   },
+                    //   validator: (String? value) {
+                    //     return (value != null && value.contains('@'))
+                    //         ? 'Do not use the @ char.'
+                    //         : null;
+                    //   },
+                    // ),
                     //
                     //
                     //
@@ -329,4 +418,21 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
+
+  // void takePhoto(ImageSource source) async {
+  //   final pickedFile = await _picker.pickImage(
+  //     source: source,
+  //   );
+  //   setState(() {
+  //     _imageFile = pickedFile as PickedFile;
+  //   });
+  // }
+  // void takePhotos(ImageSource source) async {
+  //   final ImagePicker _imagePicker = ImagePicker();
+  //   XFile? _file = await _imagePicker.pickImage(source: source);
+  //   if (_file != null) {
+  //     return await _file.readAsBytes();
+  //   }
+  //   print("No image");
+  // }
 }

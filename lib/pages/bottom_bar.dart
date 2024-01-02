@@ -4,9 +4,6 @@ import 'package:evento/pages/user_pages/search_page.dart';
 import 'package:evento/pages/user_pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
 
-// import 'package:project_0/pages/user_pages/search_page.dart';
-// import 'package:project_0/pages/user_pages/userprofile_page.dart';
-
 import 'user_pages/home_page.dart';
 import 'user_pages/list_page.dart';
 

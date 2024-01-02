@@ -1,6 +1,4 @@
-import 'package:evento/pages/user_pages/userprofile_page.dart';
 import 'package:flutter/material.dart';
-// import 'package:project_0/pages/user_pages/userprofile_page.dart';
 
 class ChangePassword extends StatefulWidget {
   const ChangePassword({super.key});
@@ -26,18 +24,18 @@ class _ChangePasswordState extends State<ChangePassword> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfilePage(),
-              ),
-            );
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black,
             size: 30,
-            shadows: [Shadow(color: Colors.white, blurRadius: 18)],
+            shadows: [
+              Shadow(
+                color: Colors.white,
+                blurRadius: 18,
+              ),
+            ],
           ),
         ),
       ),
@@ -53,7 +51,7 @@ class _ChangePasswordState extends State<ChangePassword> {
             //
             //******************* Image added to the top ********************
             Image.asset(
-              "assets/profile1.png",
+              "assets/images/profile1.png",
               fit: BoxFit.cover,
             ),
             //
@@ -94,18 +92,22 @@ class _ChangePasswordState extends State<ChangePassword> {
                     //
                     //******************** Text field of username ************
                     TextFormField(
-                      cursorColor: Colors.red,
-                      obscureText: true,
-                      // obscuringCharacter: "*",
+                      cursorColor: Colors.teal,
+                      // obscureText: true,
                       maxLength: 20,
                       controller: currentpass,
                       decoration: const InputDecoration(
-                        labelText: 'Curret Password',
+                        labelText: 'Current Password',
                         counterText: "",
                         labelStyle: TextStyle(
-                            fontWeight: FontWeight.w600, color: Colors.red),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(width: 1.5, color: Colors.red),
+                          borderSide: BorderSide(
+                            width: 1.5,
+                            color: Colors.teal,
+                          ),
                         ),
                       ),
                       onSaved: (String? value) {
@@ -115,6 +117,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                       validator: (String? value) {
                         if (value!.trim().isEmpty) {
                           return 'This field is required';
+                        } else if (value.length < 8) {
+                          return "Password must contain atleast 8 character";
                         }
                         return null;
                       },
@@ -131,16 +135,22 @@ class _ChangePasswordState extends State<ChangePassword> {
                     //
                     //******************** Text field of email *****************
                     TextFormField(
-                      obscureText: true,
-                      // obscuringCharacter: "*",
+                      cursorColor: Colors.teal,
+                      // obscureText: true,
                       maxLength: 20,
                       controller: newpass,
                       decoration: const InputDecoration(
                         labelText: 'New Password',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
+                        counterText: "",
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(width: 1.5, color: Colors.blue),
+                          borderSide: BorderSide(
+                            width: 1.5,
+                            color: Colors.teal,
+                          ),
                         ),
                       ),
                       onSaved: (String? value) {
@@ -150,6 +160,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                       validator: (String? value) {
                         if (value!.trim().isEmpty) {
                           return 'This field is required';
+                        } else if (value.length < 8) {
+                          return "Password must contain atleast 8 character";
                         }
                         return null;
                       },
@@ -166,16 +178,22 @@ class _ChangePasswordState extends State<ChangePassword> {
                     //
                     //******************** Text field for mobile *****************
                     TextFormField(
-                      obscureText: true,
-                      // obscuringCharacter: "*",
+                      cursorColor: Colors.teal,
+                      // obscureText: true,
                       maxLength: 20,
                       controller: confirmpass,
                       decoration: const InputDecoration(
                         labelText: 'Confirm Password',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
+                        counterText: "",
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
                         focusedBorder: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(width: 1.5, color: Colors.blue),
+                          borderSide: BorderSide(
+                            width: 1.5,
+                            color: Colors.teal,
+                          ),
                         ),
                       ),
                       onSaved: (String? value) {
@@ -185,6 +203,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                       validator: (String? value) {
                         if (value!.trim().isEmpty) {
                           return 'This field is required';
+                        } else if (value != newpass.text) {
+                          return "Password do not match !";
                         }
                         return null;
                       },
@@ -204,7 +224,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                   padding: const EdgeInsets.all(10.0),
                   child: TextButton(
                     onPressed: () {},
-                    child: Text("forgot password"),
+                    child: const Text("forgot password",
+                        style: TextStyle(color: Colors.blue)),
                   ),
                 ),
               ],

@@ -18,6 +18,10 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
     });
   }
 
+//
+  //
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,12 +36,6 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
-            // Navigator.pop(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => ListPage(),
-            //   ),
-            // );
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -50,7 +48,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
       //
       //
       //******************** Body **********************
-      backgroundColor: Colors.black12,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -59,9 +57,10 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
             //
             //****************** Carousel image added on top ******************
             SizedBox(
-              height: 370,
+              height: MediaQuery.of(context).size.height / 2.2,
               child: ImageSlideshow(
-                indicatorColor: Colors.blue,
+                indicatorColor: Colors.teal,
+                indicatorRadius: 3,
                 onPageChanged: (value) {
                   debugPrint('Page changed: $value');
                 },
@@ -69,15 +68,15 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                 isLoop: true,
                 children: [
                   Image.asset(
-                    'assets/img1.png',
+                    'assets/images/img1.png',
                     fit: BoxFit.cover,
                   ),
                   Image.asset(
-                    'assets/img2.jpg',
+                    'assets/images/img2.jpg',
                     fit: BoxFit.cover,
                   ),
                   Image.asset(
-                    'assets/img3.jpg',
+                    'assets/images/img3.jpg',
                     fit: BoxFit.cover,
                   ),
                 ],
@@ -92,8 +91,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
               padding: const EdgeInsets.all(20),
               color: Colors.teal,
               height: 220,
-              width: double.infinity,
-
+              width: MediaQuery.of(context).size.width,
               //
               //
               //
@@ -106,16 +104,9 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                       //
                       //
                       //**************** Profile image container *****************
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("assets/img1.png")),
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                          color: Colors.white,
-                          // shape: BoxShape.circle,
-                        ),
+                      const CircleAvatar(
+                        radius: 40,
+                        backgroundImage: AssetImage("assets/images/img1.png"),
                       ),
                       //
                       //
@@ -128,11 +119,10 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                       //
                       //
                       //************** Column contain subtext ****************
-
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Heaven Art & Events",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -143,11 +133,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                           //
                           //
                           //
-                          SizedBox(
-                            height: 5,
-                          ),
-                          //
-                          //
+                          //**************** Rating stars *******************
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -200,9 +186,12 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                                       : Colors.grey,
                                 ),
                                 onTap: () => rate(5),
-                              )
+                              ),
                             ],
                           ),
+                          //
+                          //
+                          //
                         ],
                       ),
                     ],
@@ -215,6 +204,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                   ),
                   //************** Row contains details ****************
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //
                       //
@@ -244,7 +234,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: (20),
-                              color: Colors.white,
+                              color: Colors.amber,
                             ),
                           ),
                         ],
@@ -254,6 +244,9 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                       //
                     ],
                   ),
+                  //
+                  //
+                  //
                 ],
               ),
             ),
@@ -261,17 +254,16 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
             //
             //
             //
+            const SizedBox(
+              height: 20,
+            ),
+            //
+            //
+            //
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  //
-                  //
-                  //
-                  SizedBox(
-                    height: 20,
-                  ),
-                  //
                   //
                   //
                   const Divider(
@@ -314,6 +306,13 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                                 color: Colors.black,
                                 thickness: 2,
                               ),
+                              Text(
+                                'Name ceremony',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: (15),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -329,13 +328,6 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                         IntrinsicHeight(
                           child: Row(
                             children: [
-                              Text(
-                                'Name ceremony',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: (15),
-                                ),
-                              ),
                               VerticalDivider(
                                 color: Colors.black,
                                 thickness: 2,
@@ -379,14 +371,8 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                   //
                   //
                   //
-                  SizedBox(
-                    height: 20,
-                  ),
-                  //
-                  //
-                  //
                   const SizedBox(
-                    height: 15,
+                    height: 25,
                   ),
                   //
                   //
@@ -404,7 +390,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                         width: 10,
                       ),
                       Text(
-                        'Shop No 5 Excel Complex,  Azadi Road ,  \n Eranakulam - '
+                        'Shop No 5 Excel Complex,  Azadi Road ,\nEranakulam - '
                         '68011 (opposite police station)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -422,26 +408,33 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                   //
                   //
                   //
-                  const Text(
-                    'Mon - Sat   10:00 am - 10:00 pm',
-                    style: TextStyle(
-                      fontSize: (15),
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Available on -",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(
+                        'Mon - Sat   10:00 am - 10:00 pm',
+                        style: TextStyle(
+                          fontSize: (15),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   //
                   //
                   //
                   const SizedBox(
-                    height: 20,
+                    height: 70,
                   ),
                   //
                   //
                   //
                   //
-                  const SizedBox(
-                    height: 30,
-                  ),
                 ],
               ),
             ),

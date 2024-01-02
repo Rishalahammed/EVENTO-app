@@ -1,3 +1,5 @@
+import 'package:evento/product_dt.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../firestore.dart';
@@ -10,13 +12,13 @@ class AddproductPage extends StatefulWidget {
 }
 
 class _AddproductPageState extends State<AddproductPage> {
-  final List<CategoryList> _categorys = [
-    CategoryList("Inauguration Events"),
-    CategoryList("Birthday Parties"),
-    CategoryList("pre wedding events"),
-    CategoryList("Inauguration Events"),
-    CategoryList("Birthday Parties "),
-    CategoryList("pre wedding events"),
+  List<String> _categorys = [
+    "Inauguration Events",
+    "Birthday Parties",
+    "pre wedding events",
+    "Inauguration Events",
+    "Birthday Parties ",
+    "pre wedding events"
   ];
 
   TextEditingController _descriptionController = TextEditingController();
@@ -58,10 +60,15 @@ class _AddproductPageState extends State<AddproductPage> {
             padding: const EdgeInsets.only(right: 25),
             onPressed: () {
               obj.addProduct(
-                _descriptionController.text.trim(),
-                _categoryController.text.trim(),
-                _prizeController.text.trim(),
-              );
+                  FirebaseAuth.instance.currentUser!.uid,
+                  // _descriptionController.text.trim(),
+                  // _categoryController.text.trim(),
+                  // _prizeController.text.trim(),
+                  UserModel(
+                      userName: _descriptionController.text,
+                      userEmail: _categoryController.text,
+                      mobNo: _prizeController.text,
+                      whastappNo: _prizeController.text));
             },
             icon: const Icon(
               Icons.check_rounded,
@@ -74,10 +81,14 @@ class _AddproductPageState extends State<AddproductPage> {
         //
         //
         //******************* Text add product ******************
-        title: Text(
+        title: const Text(
           "ADD PRODUCTS",
           style: TextStyle(
-              fontSize: 25, fontWeight: FontWeight.w500, letterSpacing: 1),
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
       ),
@@ -115,7 +126,7 @@ class _AddproductPageState extends State<AddproductPage> {
               Stack(
                 children: [
                   Container(
-                    height: 200,
+                    height: 220,
                     width: double.infinity,
                     decoration: BoxDecoration(
                         color: Colors.teal.shade50,
@@ -135,14 +146,19 @@ class _AddproductPageState extends State<AddproductPage> {
                         alignment: Alignment.topCenter,
                         child: SizedBox(
                             height: 160,
-                            child: Image.asset("assets/addimg.png")),
+                            child: Image.asset("assets/images/addimg.png")),
                       ),
                       //
                       //
                       //
                       TextButton(
                         onPressed: () {},
-                        child: const Text("Add Images"),
+                        child: const Text(
+                          "Add Images",
+                          style: TextStyle(
+                            color: Colors.blue,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -162,7 +178,7 @@ class _AddproductPageState extends State<AddproductPage> {
               //
               //**************** Second Container of description *******************
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 height: 160,
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -175,7 +191,7 @@ class _AddproductPageState extends State<AddproductPage> {
                 //**************** Column with text and text field ****************
                 child: Column(
                   children: [
-                    Align(
+                    const Align(
                       alignment: Alignment.topLeft,
                       child: Text(
                         " Description",
@@ -187,19 +203,20 @@ class _AddproductPageState extends State<AddproductPage> {
                     ),
                     //
                     //
-                    SizedBox(
+                    const SizedBox(
                       height: 8,
                     ),
                     //
                     //
-                    Divider(
+                    const Divider(
                       thickness: 3,
                     ),
                     //
                     //
                     TextField(
+                      maxLines: 2,
                       controller: _descriptionController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: " Write About Your Product",
                         border: InputBorder.none,
                       ),
@@ -217,20 +234,20 @@ class _AddproductPageState extends State<AddproductPage> {
               //
               //
               //************** Text and text field of category **************
-              Text(" Category",
+              const Text(" Category",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                   )),
               TextField(
                 controller: _categoryController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "  Flower Designs | Bussiness Events |",
                 ),
               ),
               //
               //
               //
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               //
@@ -247,22 +264,29 @@ class _AddproductPageState extends State<AddproductPage> {
                     padding: const EdgeInsets.only(
                       right: 5,
                     ),
-                    child: Container(
-                      width: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.black26,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _categoryController.text = _categorys[index];
+                        });
+                      },
+                      child: Container(
+                        width: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(
+                            width: 2,
+                            color: Colors.black26,
+                          ),
                         ),
-                      ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          _categorys[index]._categoryhint!,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            _categorys[index],
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -274,17 +298,17 @@ class _AddproductPageState extends State<AddproductPage> {
               //
               //
               //
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               //
               //
               //
               //************** Text and text field of Prize **************
-              Text("Prize"),
+              const Text("Prize"),
               TextField(
                 controller: _prizeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   prefixIcon: Icon(
                     Icons.currency_rupee,
                     size: 20,
@@ -295,7 +319,7 @@ class _AddproductPageState extends State<AddproductPage> {
               //
               //
               //
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               //
@@ -308,7 +332,7 @@ class _AddproductPageState extends State<AddproductPage> {
               //
               //
               //
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               //
@@ -326,10 +350,4 @@ class _AddproductPageState extends State<AddproductPage> {
       //
     );
   }
-}
-
-class CategoryList {
-  String? _categoryhint;
-
-  CategoryList(this._categoryhint);
 }

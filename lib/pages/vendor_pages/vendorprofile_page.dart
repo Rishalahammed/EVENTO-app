@@ -3,15 +3,10 @@ import 'package:evento/pages/vendor_pages/vendorbookings_page.dart';
 import 'package:evento/pages/vendor_pages/vendorchangepassword_page.dart';
 import 'package:evento/pages/vendor_pages/vendorenquiry_page.dart';
 import 'package:evento/pages/vendor_pages/vendorproductdetails_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../user_pages/useredit_profile.dart';
-// import 'package:project_0/pages/user_pages/useredit_profile.dart';
-// import 'package:project_0/pages/vendor_pages/vendoraddproduct.dart';
-// import 'package:project_0/pages/vendor_pages/vendorbookings_page.dart';
-// import 'package:project_0/pages/vendor_pages/vendorchangepassword_page.dart';
-// import 'package:project_0/pages/vendor_pages/vendorenquiry_page.dart';
-// import 'package:project_0/pages/vendor_pages/vendorproductdetails_page.dart';
 
 class VendorprofilePage extends StatefulWidget {
   const VendorprofilePage({super.key});
@@ -21,12 +16,17 @@ class VendorprofilePage extends StatefulWidget {
 }
 
 class _VendorprofilePageState extends State<VendorprofilePage> {
+  //
+  //
+  //
+  //************** Dummy list **************
   final List<CategoryList> _categorys = [
     CategoryList("Inauguration Events"),
     CategoryList("Birthday Parties"),
     CategoryList("pre wedding events"),
     CategoryList("Inauguration Events"),
     CategoryList("Birthday Parties "),
+    CategoryList("pre wedding events"),
     CategoryList("pre wedding events"),
     CategoryList("pre wedding events"),
     CategoryList("pre wedding events"),
@@ -61,16 +61,16 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
               alignment: Alignment.center,
               children: [
                 Image.asset(
-                  "assets/profile1.png",
+                  "assets/images/profile1.png",
                 ),
                 //
                 //
                 //
-                Positioned(
+                const Positioned(
                   bottom: -50,
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundImage: AssetImage("assets/people.png"),
+                    backgroundImage: AssetImage("assets/images/people.png"),
                   ),
                 ),
               ],
@@ -90,12 +90,15 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                         MaterialPageRoute(builder: (context) => EnquiryPage()),
                       );
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.assignment_outlined,
                       size: 30,
                     ),
                   ),
-                  Spacer(),
+                  //
+                  //
+                  //
+                  const Spacer(),
                   //
                   //
                   //
@@ -104,7 +107,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.dehaze_rounded,
                       size: 30,
                     ),
@@ -120,24 +123,26 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                             //
                             //
                             //*************** Text settings of menu ***************
-                            Text(" Settings",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18)),
-                            Spacer(),
+                            const Text(
+                              " Settings",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            //
+                            //
+                            //
+                            const Spacer(),
                             //
                             //
                             //
                             //**************** Close button for menu ***************
                             IconButton(
                               onPressed: () {
-                                Navigator.pop(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => VendorprofilePage(),
-                                  ),
-                                );
+                                Navigator.pop(context);
                               },
-                              icon: Icon(Icons.close),
+                              icon: const Icon(Icons.close),
                             ),
                           ],
                         ),
@@ -146,9 +151,32 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                       //
                       //
                       //***************** Divider in the menu *****************
-                      PopupMenuItem(
+                      const PopupMenuItem(
                         child: Divider(
                           thickness: 2,
+                        ),
+                      ),
+                      //
+                      //
+                      //
+                      //***************** First item in the menu *****************
+                      PopupMenuItem(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VendorbookingsPage(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Booking & Orders',
+                            style: TextStyle(
+                                color: Colors.black45,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                       //
@@ -161,12 +189,12 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => VendorbookingsPage(),
+                                builder: (context) => VendorchangePassword(),
                               ),
                             );
                           },
-                          child: Text(
-                            'Booking & Orders',
+                          child: const Text(
+                            'Change Password',
                             style: TextStyle(
                                 color: Colors.black45,
                                 fontSize: 15,
@@ -180,31 +208,8 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                       //***************** Third item in the menu *****************
                       PopupMenuItem(
                         child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VendorchangePassword(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Change Password',
-                            style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                      //
-                      //
-                      //
-                      //***************** Sixth item in the menu *****************
-                      PopupMenuItem(
-                        child: TextButton(
                           onPressed: () {},
-                          child: Text(
+                          child: const Text(
                             'About',
                             style: TextStyle(
                                 color: Colors.black45,
@@ -223,14 +228,23 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                           height: 35,
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
-                              side: BorderSide(width: 2, color: Colors.black54),
+                              side: const BorderSide(
+                                width: 2,
+                                color: Colors.black54,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                            onPressed: () {},
-                            child: Text(
+                            onPressed: () {
+                              FirebaseAuth.instance.signOut();
+                            },
+                            child: const Text(
                               "Logout",
                               style: TextStyle(
-                                  color: Colors.black45,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.black45,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
@@ -249,21 +263,21 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
             //
             //
             //
-            SizedBox(
-              height: 25,
+            const SizedBox(
+              height: 20,
             ),
             //
             //
             //
             //**************** Company name text ****************
-            Text(
+            const Text(
               "KVS Caters",
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
             ),
             //
             //
             //
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
             //
@@ -318,8 +332,8 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
             //
             //
             //
-            SizedBox(
-              height: 10,
+            const SizedBox(
+              height: 15,
             ),
             //
             //
@@ -330,8 +344,11 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
               width: 120,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(
+                  side: const BorderSide(
                     width: 2,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () {
@@ -342,7 +359,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                     ),
                   );
                 },
-                child: Text(
+                child: const Text(
                   "Edit Profile",
                   style: TextStyle(
                       color: Colors.black,
@@ -354,7 +371,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
             //
             //
             //
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             //
@@ -364,17 +381,19 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.all(15.0),
                   //
                   //
                   //
                   child: GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 220,
-                        childAspectRatio: 2 / 2.5,
-                        crossAxisSpacing: 30,
-                        mainAxisSpacing: 20),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 220,
+                            childAspectRatio: 2 / 2.5,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
                     itemCount: _categorys.length,
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
@@ -386,7 +405,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                         );
                       },
                       child: Container(
-                        padding: EdgeInsets.all(6),
+                        padding: EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: Colors.teal.shade100,
                           borderRadius: BorderRadius.circular(10),
@@ -410,9 +429,9 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                               width: double.infinity,
                               height: 110,
                               decoration: BoxDecoration(
-                                image: DecorationImage(
+                                image: const DecorationImage(
                                   fit: BoxFit.cover,
-                                  image: AssetImage("assets/img1.png"),
+                                  image: AssetImage("assets/images/img1.png"),
                                 ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -420,7 +439,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                             //
                             //
                             //
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             //
@@ -434,15 +453,21 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                                 children: [
                                   Text(
                                     _categorys[index]._categoryhint!,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
+                                  //
+                                  //
+                                  //
+                                  const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
+                                  //
+                                  //
+                                  //
+                                  const Text(
                                     "80000",
                                     style: TextStyle(
                                       fontSize: 15,
@@ -490,6 +515,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
             );
           },
           backgroundColor: Colors.teal,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

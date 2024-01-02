@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 
-import 'list_page.dart';
-// import 'package:project_0/pages/user_pages/list_page.dart';
-
 class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});
 
@@ -12,8 +9,8 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  // Rating star function
   int _rating = 0;
-
   void rate(int rating) {
     //Other actions based on rating such as api calls.
     setState(() {
@@ -21,6 +18,10 @@ class _DetailsPageState extends State<DetailsPage> {
     });
   }
 
+  //
+  //
+  //
+  //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +35,7 @@ class _DetailsPageState extends State<DetailsPage> {
         elevation: 0.0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ListPage(),
-              ),
-            );
+            Navigator.pop(context);
           },
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
@@ -58,6 +54,7 @@ class _DetailsPageState extends State<DetailsPage> {
         child: FloatingActionButton(
           onPressed: () {},
           backgroundColor: Colors.teal,
+          foregroundColor: Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: const Text("+ ADD",
@@ -68,7 +65,7 @@ class _DetailsPageState extends State<DetailsPage> {
       //
       //
       //******************** Body **********************
-      backgroundColor: Colors.black12,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -77,9 +74,10 @@ class _DetailsPageState extends State<DetailsPage> {
             //
             //****************** Carousel image added on top ******************
             SizedBox(
-              height: 370,
+              height: MediaQuery.of(context).size.height / 2.2,
               child: ImageSlideshow(
-                indicatorColor: Colors.blue,
+                indicatorColor: Colors.teal,
+                indicatorRadius: 3,
                 onPageChanged: (value) {
                   debugPrint('Page changed: $value');
                 },
@@ -87,15 +85,15 @@ class _DetailsPageState extends State<DetailsPage> {
                 isLoop: true,
                 children: [
                   Image.asset(
-                    'assets/img1.png',
+                    'assets/images/img1.png',
                     fit: BoxFit.cover,
                   ),
                   Image.asset(
-                    'assets/img2.jpg',
+                    'assets/images/img2.jpg',
                     fit: BoxFit.cover,
                   ),
                   Image.asset(
-                    'assets/img3.jpg',
+                    'assets/images/img3.jpg',
                     fit: BoxFit.cover,
                   ),
                 ],
@@ -110,8 +108,7 @@ class _DetailsPageState extends State<DetailsPage> {
               padding: const EdgeInsets.all(20),
               color: Colors.teal,
               height: 220,
-              width: double.infinity,
-
+              width: MediaQuery.of(context).size.width,
               //
               //
               //
@@ -124,16 +121,9 @@ class _DetailsPageState extends State<DetailsPage> {
                       //
                       //
                       //**************** Profile image container *****************
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("assets/img1.png")),
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                          color: Colors.white,
-                          // shape: BoxShape.circle,
-                        ),
+                      const CircleAvatar(
+                        radius: 40,
+                        backgroundImage: AssetImage("assets/images/img1.png"),
                       ),
                       //
                       //
@@ -146,24 +136,80 @@ class _DetailsPageState extends State<DetailsPage> {
                       //
                       //
                       //************** Column contain subtext ****************
-                      const Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Column(
-                          children: [
-                            Text(
-                              "Heaven Art & Events",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: (25),
-                                color: Colors.white,
-                              ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Heaven Art & Events",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: (25),
+                              color: Colors.white,
                             ),
-                          ],
-                        ),
-                        //
-                        //
-                        //
-                        //
+                          ),
+                          //
+                          //
+                          //
+                          //**************** Rating stars *******************
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 15,
+                                  color: _rating >= 1
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(1),
+                              ),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 15,
+                                  color: _rating >= 2
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(2),
+                              ),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 15,
+                                  color: _rating >= 3
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(3),
+                              ),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 15,
+                                  color: _rating >= 4
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(4),
+                              ),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 15,
+                                  color: _rating >= 5
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(5),
+                              ),
+                            ],
+                          ),
+                          //
+                          //
+                          //
+                        ],
                       ),
                     ],
                   ),
@@ -175,6 +221,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   ),
                   //************** Row contains details ****************
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //
                       //
@@ -204,7 +251,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: (20),
-                              color: Colors.white,
+                              color: Colors.amber,
                             ),
                           ),
                         ],
@@ -214,7 +261,7 @@ class _DetailsPageState extends State<DetailsPage> {
                       //
                       //
                       Padding(
-                        padding: const EdgeInsets.only(left: 15),
+                        padding: const EdgeInsets.only(left: 25),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -222,37 +269,56 @@ class _DetailsPageState extends State<DetailsPage> {
                             //
                             //
                             //****************** Call button ********************
-                            SizedBox(
-                              width: 80,
-                              height: 30,
-                              child: ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.black54),
-                                  ),
-                                  child: const Text(
-                                    "Call",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
+                            // SizedBox(
+                            //   width: 80,
+                            //   height: 35,
+                            //   child: ElevatedButton(
+                            //       onPressed: () {},
+                            //       style: ButtonStyle(
+                            //         shape: MaterialStatePropertyAll(
+                            //           RoundedRectangleBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //           ),
+                            //         ),
+                            //         foregroundColor:
+                            //             const MaterialStatePropertyAll(
+                            //           Colors.white,
+                            //         ),
+                            //         backgroundColor: MaterialStateProperty.all(
+                            //           Colors.black54,
+                            //         ),
+                            //       ),
+                            //       child: const Text(
+                            //         "Call",
+                            //         style: TextStyle(
+                            //             fontSize: 15,
+                            //             fontWeight: FontWeight.bold),
+                            //       )),
+                            // ),
                             //
                             //
-                            const SizedBox(
-                              height: 10,
-                            ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
                             //
                             //
                             //
                             //****************** Enquiry button ********************
                             SizedBox(
-                              width: 90,
+                              width: 100,
                               height: 35,
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ButtonStyle(
+                                  shape: MaterialStatePropertyAll(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  foregroundColor:
+                                      const MaterialStatePropertyAll(
+                                    Colors.white,
+                                  ),
                                   backgroundColor:
                                       MaterialStateProperty.all(Colors.black54),
                                 ),
@@ -260,7 +326,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   "Enquiry",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16),
+                                      fontSize: 15),
                                 ),
                               ),
                             ),
@@ -271,12 +337,24 @@ class _DetailsPageState extends State<DetailsPage> {
                           ],
                         ),
                       )
+                      //
+                      //
+                      //
                     ],
                   ),
+                  //
+                  //
+                  //
                 ],
               ),
             ),
             //
+            //
+            //
+            //
+            const SizedBox(
+              height: 20,
+            ),
             //
             //
             //
@@ -326,6 +404,13 @@ class _DetailsPageState extends State<DetailsPage> {
                                 color: Colors.black,
                                 thickness: 2,
                               ),
+                              Text(
+                                'Name ceremony',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: (15),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -341,13 +426,6 @@ class _DetailsPageState extends State<DetailsPage> {
                         IntrinsicHeight(
                           child: Row(
                             children: [
-                              Text(
-                                'Name ceremony',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: (15),
-                                ),
-                              ),
                               VerticalDivider(
                                 color: Colors.black,
                                 thickness: 2,
@@ -392,7 +470,7 @@ class _DetailsPageState extends State<DetailsPage> {
                   //
                   //
                   const SizedBox(
-                    height: 15,
+                    height: 25,
                   ),
                   //
                   //
@@ -410,7 +488,7 @@ class _DetailsPageState extends State<DetailsPage> {
                         width: 10,
                       ),
                       Text(
-                        'Shop No 5 Excel Complex,  Azadi Road ,  \n Eranakulam - '
+                        'Shop No 5 Excel Complex,  Azadi Road ,\nEranakulam - '
                         '68011 (opposite police station)',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -423,132 +501,131 @@ class _DetailsPageState extends State<DetailsPage> {
                   //
                   //
                   const SizedBox(
-                    height: 20,
+                    height: 30,
                   ),
                   //
                   //
                   //
-                  const Text(
-                    'Mon - Sat   10:00 am - 10:00 pm',
-                    style: TextStyle(
-                      fontSize: (15),
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Available on -",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Text(
+                        'Mon - Sat   10:00 am - 10:00 pm',
+                        style: TextStyle(
+                          fontSize: (15),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   //
                   //
                   //
                   const SizedBox(
-                    height: 20,
+                    height: 40,
                   ),
                   //
                   //
                   //
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //
-                      //
-                      //
-                      //***************** Container of rate us *******************
-                      Container(
-                        height: 90,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 2,
+                  Container(
+                    height: 90,
+                    width: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        width: 2,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          //
+                          //
+                          //
+                          const Text(
+                            'Rate Us',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              //
-                              //
-                              //
-                              const Text(
-                                'Rate Us',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                          //
+                          //
+                          //
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          //*************** Row contain rating stars ****************
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 25,
+                                  color: _rating >= 1
+                                      ? Colors.orange
+                                      : Colors.grey,
                                 ),
+                                onTap: () => rate(1),
                               ),
-                              //
-                              //
-                              //
-                              const SizedBox(
-                                height: 10,
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 25,
+                                  color: _rating >= 2
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(2),
                               ),
-                              //*************** Row contain rating stars ****************
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.star,
-                                      size: 25,
-                                      color: _rating >= 1
-                                          ? Colors.orange
-                                          : Colors.grey,
-                                    ),
-                                    onTap: () => rate(1),
-                                  ),
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.star,
-                                      size: 25,
-                                      color: _rating >= 2
-                                          ? Colors.orange
-                                          : Colors.grey,
-                                    ),
-                                    onTap: () => rate(2),
-                                  ),
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.star,
-                                      size: 25,
-                                      color: _rating >= 3
-                                          ? Colors.orange
-                                          : Colors.grey,
-                                    ),
-                                    onTap: () => rate(3),
-                                  ),
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.star,
-                                      size: 25,
-                                      color: _rating >= 4
-                                          ? Colors.orange
-                                          : Colors.grey,
-                                    ),
-                                    onTap: () => rate(4),
-                                  ),
-                                  GestureDetector(
-                                    child: Icon(
-                                      Icons.star,
-                                      size: 25,
-                                      color: _rating >= 5
-                                          ? Colors.orange
-                                          : Colors.grey,
-                                    ),
-                                    onTap: () => rate(5),
-                                  )
-                                ],
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 25,
+                                  color: _rating >= 3
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(3),
                               ),
-                              //
-                              //
-                              //
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 25,
+                                  color: _rating >= 4
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(4),
+                              ),
+                              GestureDetector(
+                                child: Icon(
+                                  Icons.star,
+                                  size: 25,
+                                  color: _rating >= 5
+                                      ? Colors.orange
+                                      : Colors.grey,
+                                ),
+                                onTap: () => rate(5),
+                              )
                             ],
                           ),
                           //
                           //
                           //
-                        ),
+                        ],
                       ),
                       //
                       //
                       //
-                    ],
+                    ),
                   ),
                   //
                   //
