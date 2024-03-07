@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:evento/pages/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -20,6 +25,7 @@ class _EditProfileState extends State<EditProfile> {
   // final ImagePicker _picker = ImagePicker();
 
   bool value = false;
+  File? imageFile;
   // Uint8List? _image;
   //
   // void selectImage() async {
@@ -64,6 +70,7 @@ class _EditProfileState extends State<EditProfile> {
             //
             //
             //******************* Image added to the top ********************
+
             Image.asset(
               "assets/images/profile1.png",
               fit: BoxFit.cover,
@@ -97,128 +104,49 @@ class _EditProfileState extends State<EditProfile> {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                // _image != null
-                //     ? Container(
-                //         height: 110,
-                //         width: 110,
-                //         decoration: BoxDecoration(
-                //           borderRadius: BorderRadius.circular(10),
-                //           image: DecorationImage(
-                //             fit: BoxFit.cover,
-                //             image: MemoryImage(_image!),
-                //           ),
-                //         ),
-                //       )
-                //     :
                 //
                 //
                 //
-                //*************** Image holding container *****************
-                InkWell(
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 110,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage("assets/images/people.png"),
-                      ),
-                    ),
-                  ),
-                  //
-                  //
-                  //
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: ((builder) => Container(
-                            padding: EdgeInsets.all(20),
-                            height: 150,
-                            width: MediaQuery.of(context).size.width,
-                            // color: Colors.red,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                //
-                                //
-                                //
-                                Text(
-                                  "Choose Profile Photo",
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                //
-                                //
-                                //
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                //
-                                //
-                                //
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    //
-                                    //
-                                    //
-                                    InkWell(
-                                      onTap: () {
-                                        print("camera");
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.camera),
-                                          Text(
-                                            "Camera",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                    InkWell(
-                                      onTap: () {
-                                        print("gallery");
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.image),
-                                          Text(
-                                            "Gallery",
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                  ],
-                                ),
-                              ],
+                //******************* Default image that can be changed *********************
+                imageFile == null
+                    ? InkWell(
+                        onTap: () {
+                          showImagePicker(context);
+                        },
+                        child: Container(
+                          height: 120,
+                          width: 120,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                              image: AssetImage('assets/images/people.png'),
                             ),
-                          )),
-                    );
-                  },
-                ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      )
+                    //
+                    //
+                    //
+                    //******************** Changed image properties ********************
+                    : InkWell(
+                        onTap: () {
+                          showImagePicker(context);
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.file(
+                            imageFile!,
+                            height: 120,
+                            width: 120,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                 //
                 //
                 //
                 //*************** Icon added for profile picture update ****************
-                Positioned(
+                const Positioned(
                   bottom: 5,
                   right: -10,
                   child: Icon(Icons.add_a_photo_outlined),
@@ -253,15 +181,24 @@ class _EditProfileState extends State<EditProfile> {
                     //******************** Text field of username ************
                     TextFormField(
                       controller: editusername,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'User Name',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
-                        focusedBorder: UnderlineInputBorder(
+                        hintText: Provider.of<FireStore>(context, listen: false)
+                            .currentUserDetailModel!
+                            .userName,
+                        labelStyle:
+                            const TextStyle(fontWeight: FontWeight.w600),
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide:
                               BorderSide(width: 1.5, color: Colors.blue),
                         ),
                       ),
+                      onFieldSubmitted: (value) {
+                        Provider.of<FireStore>(context, listen: false)
+                            .editUserName(value);
+                      },
                       onSaved: (String? value) {
+                        print(value);
                         // This optional block of code can be used to run
                         // code when the user saves the form.
                       },
@@ -285,10 +222,15 @@ class _EditProfileState extends State<EditProfile> {
                     //******************** Text field of email *****************
                     TextFormField(
                       controller: editemail,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
-                        focusedBorder: UnderlineInputBorder(
+                      enabled: false,
+                      decoration: InputDecoration(
+                        labelText:
+                            Provider.of<FireStore>(context, listen: false)
+                                .currentUserDetailModel!
+                                .userEmail,
+                        labelStyle:
+                            const TextStyle(fontWeight: FontWeight.w600),
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide:
                               BorderSide(width: 1.5, color: Colors.blue),
                         ),
@@ -310,77 +252,6 @@ class _EditProfileState extends State<EditProfile> {
                     const SizedBox(
                       height: 15,
                     ),
-                    //
-                    //
-                    //
-                    //
-                    //
-                    //******************** Text field for mobile *****************
-                    // TextFormField(
-                    //   controller: edit mobile,
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'Mobile',
-                    //     labelStyle: TextStyle(fontWeight: FontWeight.w600),
-                    //     focusedBorder: UnderlineInputBorder(
-                    //       borderSide:
-                    //           BorderSide(width: 1.5, color: Colors.blue),
-                    //     ),
-                    //   ),
-                    //   onSaved: (String? value) {
-                    //     // This optional block of code can be used to run
-                    //     // code when the user saves the form.
-                    //   },
-                    //   validator: (String? value) {
-                    //     return (value != null && value.contains('@'))
-                    //         ? 'Do not use the @ char.'
-                    //         : null;
-                    //   },
-                    // ),
-                    // //
-                    // //
-                    // //
-                    // //
-                    // const SizedBox(
-                    //   height: 15,
-                    // ),
-                    // //
-                    // //
-                    // //
-                    // //******************** Text field for Whatsapp ******************
-                    // TextFormField(
-                    //   controller: editwhatsapp,
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'Whatsapp',
-                    //     labelStyle: TextStyle(fontWeight: FontWeight.w600),
-                    //     focusedBorder: UnderlineInputBorder(
-                    //       borderSide:
-                    //           BorderSide(width: 1.5, color: Colors.blue),
-                    //     ),
-                    //   ),
-                    //   onSaved: (String? value) {
-                    //     // This optional block of code can be used to run
-                    //     // code when the user saves the form.
-                    //   },
-                    //   validator: (String? value) {
-                    //     return (value != null && value.contains('@'))
-                    //         ? 'Do not use the @ char.'
-                    //         : null;
-                    //   },
-                    // ),
-                    //
-                    //
-                    //
-                    //
-                    //
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    //
-                    //
-                    //
-                    //
-
-                    //
                     //
                     //
                     //
@@ -419,20 +290,127 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  // void takePhoto(ImageSource source) async {
-  //   final pickedFile = await _picker.pickImage(
-  //     source: source,
-  //   );
-  //   setState(() {
-  //     _imageFile = pickedFile as PickedFile;
-  //   });
-  // }
-  // void takePhotos(ImageSource source) async {
-  //   final ImagePicker _imagePicker = ImagePicker();
-  //   XFile? _file = await _imagePicker.pickImage(source: source);
-  //   if (_file != null) {
-  //     return await _file.readAsBytes();
-  //   }
-  //   print("No image");
-  // }
+  //
+  //
+  //
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  //Function for image picking
+  final picker = ImagePicker();
+
+  void showImagePicker(BuildContext context) {
+    //
+    //
+    //Bottom sheet for choosing the way of picking
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return Card(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 5.2,
+            margin: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //
+                //
+                //
+                Expanded(
+                  child: InkWell(
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.image,
+                          size: 60.0,
+                        ),
+                        SizedBox(height: 12.0),
+                        Text(
+                          "Gallery",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      _imgFromGallery();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                //
+                //
+                //
+                Expanded(
+                  child: InkWell(
+                    child: const SizedBox(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            size: 60.0,
+                          ),
+                          SizedBox(height: 12.0),
+                          Text(
+                            "Camera",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                //
+                //
+                //
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  //
+  //
+  //
+  //Function of picking image from gallery
+  _imgFromGallery() async {
+    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50).then(
+      (value) {
+        if (value != null) {
+          imageCache.clear();
+          setState(
+            () {
+              imageFile = File(value.path);
+            },
+          );
+        }
+      },
+    );
+  }
+
+  //
+  //
+  //
+  //Function of picking from camera
+  _imgFromCamera() async {
+    await picker.pickImage(source: ImageSource.camera, imageQuality: 50).then(
+      (value) {
+        if (value != null) {
+          imageCache.clear();
+          setState(
+            () {
+              imageFile = File(value.path);
+            },
+          );
+        }
+      },
+    );
+  }
 }

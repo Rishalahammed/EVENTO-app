@@ -1,7 +1,7 @@
 import 'package:evento/pages/user_pages/productdetails_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../product_list.dart';
+import '../product_list.dart';
 
 class BookingsPage extends StatefulWidget {
   const BookingsPage({super.key});
@@ -100,12 +100,13 @@ class _BookingsPageState extends State<BookingsPage> {
                 //************** Row contains inside the container **************
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DetailsPage(),
-                      ),
-                    );
+                     //============================C O M M E N T E D 
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const DetailsPage(),
+                    //   ),
+                    // );
                   },
                   child: Row(
                     children: [

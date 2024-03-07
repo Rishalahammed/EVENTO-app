@@ -2,7 +2,7 @@ import 'package:evento/pages/vendor_pages/vendorsignUp.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../firebase_auth.dart';
+import '../firebase_auth.dart';
 import 'login.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -20,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final formkey = GlobalKey<FormState>();
 
   bool value = false;
+  BackendController backendController = BackendController();
 
   @override
   Widget build(BuildContext context) {
@@ -341,7 +342,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     //
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
-                        await signup(
+                        await backendController.signup(
                           email.text.trim(),
                           password.text.trim(),
                           username.text.trim(),

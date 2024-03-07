@@ -1,9 +1,13 @@
+import 'package:evento/pages/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../user_pages/userprofile_page.dart';
 // import 'package:project_0/pages/user_pages/userprofile_page.dart';
 
 class VendoreditProfile extends StatefulWidget {
+  
   const VendoreditProfile({super.key});
 
   @override
@@ -36,6 +40,8 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final provider =
+        Provider.of<FireStore>(context, listen: false).currentvendorModel;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -70,7 +76,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
             //
             //******************* Image added to the top ********************
             Image.asset(
-              "assets/profile1.png",
+              "assets/images/profile1.png",
               fit: BoxFit.cover,
             ),
             //
@@ -126,7 +132,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     borderRadius: BorderRadius.circular(10),
                     image: const DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage("assets/people.png"),
+                      image: AssetImage("assets/images/people.png"),
                     ),
                   ),
                 ),
@@ -180,6 +186,9 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                               BorderSide(width: 1.5, color: Colors.blue),
                         ),
                       ),
+                      onFieldSubmitted: (value) {
+                        FireStore().editVendordetail("userName", value);
+                      },
                       onSaved: (String? value) {
                         // This optional block of code can be used to run
                         // code when the user saves the form.
@@ -204,9 +213,11 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     //******************** Text field of email *****************
                     TextFormField(
                       controller: editemail,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
+                      decoration: InputDecoration(
+                        enabled: false,
+                        labelText: provider!.email,
+                        labelStyle:
+                            const TextStyle(fontWeight: FontWeight.w600),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
                               BorderSide(width: 1.5, color: Colors.blue),
@@ -241,7 +252,10 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                         //
                         //******************** Text field of state *****************
                         Flexible(
-                          child: TextField(
+                          child: TextFormField(
+                            onFieldSubmitted: (value) {
+                              FireStore().editVendordetail("city", value);
+                            },
                             controller: editcity,
                             decoration: const InputDecoration(
                               labelText: "City",
@@ -266,7 +280,10 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                         //
                         //******************** Text field of city *****************
                         Flexible(
-                          child: TextField(
+                          child: TextFormField(
+                            onFieldSubmitted: (value) {
+                              FireStore().editVendordetail("state", value);
+                            },
                             controller: editstate,
                             decoration: const InputDecoration(
                               labelText: "State",
@@ -297,6 +314,9 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     //
                     //******************** Text field for mobile *****************
                     TextFormField(
+                      onFieldSubmitted: (value) {
+                        FireStore().editVendordetail("Mobile Number", value);
+                      },
                       controller: editmobile,
                       decoration: const InputDecoration(
                         labelText: 'Mobile',
@@ -328,6 +348,9 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     //
                     //******************** Text field for Whatsapp ******************
                     TextFormField(
+                      onFieldSubmitted: (value) {
+                        FireStore().editVendordetail("Whatsapp Number", value);
+                      },
                       controller: editwhatsapp,
                       decoration: const InputDecoration(
                         labelText: 'Whatsapp',
@@ -387,9 +410,10 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
             ),
             onPressed: () {
               if (formkey.currentState!.validate()) {
-                print(editcity);
-                print(editstate);
-                print(editusername);
+                Provider.of<FireStore>(context, listen: false)
+                    .fetchCurrentUserDetailData(
+                        "All-Vendor", FirebaseAuth.instance.currentUser!.uid);
+                Navigator.of(context).pop(true);
               }
             },
             child: const Text('Submit'),

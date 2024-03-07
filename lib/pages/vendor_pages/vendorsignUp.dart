@@ -1,4 +1,4 @@
-import 'package:evento/firebase_auth.dart';
+import 'package:evento/pages/firebase_auth.dart';
 import 'package:evento/pages/vendor_pages/vendorlogin.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +21,8 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
 
   bool value = false;
 
+  BackendController backendController = BackendController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +42,6 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                   height: MediaQuery.of(context).size.height / 3,
                   child: Image.asset(
                     'assets/images/selling.png',
-                    // height: 100,
                   ),
                 ),
                 //
@@ -205,7 +206,6 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                //
                 //
                 //
                 //
@@ -543,143 +543,156 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                     //
                     //----------------------------------------------------------------------
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          backgroundColor: Colors.teal.shade50,
-                          contentPadding: const EdgeInsets.all(15),
-                          content: SizedBox(
-                            height: MediaQuery.of(context).size.height / 3.5,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                //
-                                //
-                                //
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                //
-                                //
-                                //
-                                const Text(
-                                  "Choose your type of account want to create:",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black54,
+                      if (formkey.currentState!.validate()) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            backgroundColor: Colors.teal.shade50,
+                            contentPadding: const EdgeInsets.all(15),
+                            content: SizedBox(
+                              height: MediaQuery.of(context).size.height / 3.5,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  //
+                                  //
+                                  //
+                                  const SizedBox(
+                                    height: 5,
                                   ),
-                                ),
-                                //
-                                //
-                                //
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                //
-                                //
-                                //
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.teal,
-                                    fixedSize: const Size(double.maxFinite, 50),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                  //
+                                  //
+                                  //
+                                  const Text(
+                                    "Choose your type of account want to create:",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black54,
                                     ),
                                   ),
                                   //
                                   //
-                                  onPressed: () {
-                                    formkey.currentState!.validate();
-                                    managementsignup(
-                                      companyname.text.trim(),
-                                      email.text.trim(),
-                                      mobile.text.trim(),
-                                      whatsapp.text.trim(),
-                                      address.text.trim(),
-                                      password.text.trim(),
-                                      context,
-                                    );
-                                  },
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Log in as Management"),
-                                      Icon(Icons.keyboard_arrow_right_rounded),
-                                    ],
+                                  //
+                                  const SizedBox(
+                                    height: 5,
                                   ),
-                                ),
-                                //
-                                //
-                                ElevatedButton(
-                                  onPressed: () {
-                                    formkey.currentState!.validate();
-                                    sellersignup(
-                                      companyname.text.trim(),
-                                      email.text.trim(),
-                                      mobile.text.trim(),
-                                      whatsapp.text.trim(),
-                                      address.text.trim(),
-                                      password.text.trim(),
-                                      context,
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.teal,
-                                    fixedSize: const Size(double.maxFinite, 50),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                  //
+                                  //
+                                  //
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.teal,
+                                      fixedSize:
+                                          const Size(double.maxFinite, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    //
+                                    //
+                                    onPressed: () {
+                                      formkey.currentState!.validate();
+                                      backendController.vendorSignUp(
+                                          companyname.text.trim(),
+                                          email.text.trim(),
+                                          mobile.text.trim(),
+                                          whatsapp.text.trim(),
+                                          address.text.trim(),
+                                          password.text.trim(),
+                                          context,
+                                          "Management");
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("Log in as Management"),
+                                        Icon(
+                                            Icons.keyboard_arrow_right_rounded),
+                                      ],
                                     ),
                                   ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Log in as Product Seller"),
-                                      Icon(Icons.keyboard_arrow_right_rounded),
-                                    ],
-                                  ),
-                                ),
-                                //
-                                //
-                                ElevatedButton(
-                                  onPressed: () {
-                                    formkey.currentState!.validate();
-                                    caterersignup(
-                                      companyname.text.trim(),
-                                      email.text.trim(),
-                                      mobile.text.trim(),
-                                      whatsapp.text.trim(),
-                                      address.text.trim(),
-                                      password.text.trim(),
-                                      context,
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.teal,
-                                    fixedSize: const Size(double.maxFinite, 50),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                  //
+                                  //
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      formkey.currentState!.validate();
+                                      backendController.vendorSignUp(
+                                          companyname.text.trim(),
+                                          email.text.trim(),
+                                          mobile.text.trim(),
+                                          whatsapp.text.trim(),
+                                          address.text.trim(),
+                                          password.text.trim(),
+                                          context,
+                                          "Product Seller");
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.teal,
+                                      fixedSize:
+                                          const Size(double.maxFinite, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("Log in as Product Seller"),
+                                        Icon(
+                                            Icons.keyboard_arrow_right_rounded),
+                                      ],
                                     ),
                                   ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Log in as Food Caterer"),
-                                      Icon(Icons.keyboard_arrow_right_rounded),
-                                    ],
+                                  //
+                                  //
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      formkey.currentState!.validate();
+                                      backendController.vendorSignUp(
+                                          companyname.text.trim(),
+                                          email.text.trim(),
+                                          mobile.text.trim(),
+                                          whatsapp.text.trim(),
+                                          address.text.trim(),
+                                          password.text.trim(),
+                                          context,
+                                          "Food Caterer");
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.teal,
+                                      fixedSize:
+                                          const Size(double.maxFinite, 50),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("Log in as Food Caterer"),
+                                        Icon(
+                                            Icons.keyboard_arrow_right_rounded),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                //
-                                //
-                                //
-                              ],
+                                  //
+                                  //
+                                  //
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      }
+
                       // formkey.currentState!.validate();
                       //
                       // vdsignup(
@@ -778,7 +791,6 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                 //
                 //
                 //
-                //
               ],
             ),
           ),
@@ -786,12 +798,4 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
       ),
     );
   }
-//
-// Future<void> login() async {
-//   final auth = FirebaseAuth.instance;
-//   auth.signInWithEmailAndPassword(
-//     email: email.text,
-//     password: password.text,
-//   );
-//}
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../product_list.dart';
+import '../product_list.dart';
 // import 'package:project_0/product_list.dart';
 
 class EnquiryPage extends StatefulWidget {

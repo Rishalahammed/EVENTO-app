@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // import 'package:project_0/pages/user_pages/userprofile_page.dart';
 // import 'package:project_0/product_list.dart';
 
-import '../../product_list.dart';
+import '../product_list.dart';
 
 class VendorbookingsPage extends StatefulWidget {
   const VendorbookingsPage({super.key});
@@ -111,12 +111,13 @@ class _VendorbookingsPageState extends State<VendorbookingsPage> {
                 //************** Row contains inside the container **************
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const VendordetailsPage(),
-                      ),
-                    );
+                    //    ----------------------------commented-----------------------
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => VendordetailsPage(),
+                    //   ),
+                    // );
                   },
                   child: Row(
                     children: [

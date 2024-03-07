@@ -1,6 +1,7 @@
 import 'package:evento/pages/firestore.dart';
 import 'package:evento/pages/user_pages/productdetails_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_page_view/pager/page_controller.dart';
 import 'package:scroll_page_view/pager/scroll_page_view.dart';
 
@@ -50,7 +51,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.all(5),
                   height: 250,
                   child: ScrollPageView(
                     controller: ScrollPageController(),
@@ -185,7 +188,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         minHeight: 200, //minimum height
                         minWidth: 200, // minimum width
 
-                        maxHeight: MediaQuery.of(context).size.height,
+                        maxHeight: 500,
                         //maximum height set to 100% of vertical height
 
                         maxWidth: MediaQuery.of(context).size.width,
@@ -206,321 +209,455 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           //
                           //
                           //// 1- First tab bar view *******************************************************************
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            //
-                            //
-                            //
-                            child: GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              //Physics added to scroll whole page without grid scroll
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 220,
-                                childAspectRatio: 2 / 2.3,
-                                crossAxisSpacing: 30,
-                                mainAxisSpacing: 20,
-                              ),
-                              itemCount: 15,
-                              //
-                              //
-                              //
-                              //************* built column as the item builder and wrapped
-                              // in inkwell to give on tap function **********************
-                              itemBuilder: (context, index) => InkWell(
-                                onTap: () async {
-                                  await fireobj.fetchCurrentUser();
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => const DetailsPage(),
-                                  //   ),
-                                  // );
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //
-                                    //
-                                    //
-                                    //************** Inside the column we added container to hold the image *************
-                                    Container(
-                                      width: double.infinity,
-                                      height: 110,
-                                      decoration: BoxDecoration(
-                                        image: const DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              "assets/images/img1.png"),
-                                        ),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                    //*************** and added a column for adding texts and price of product **************
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                          Consumer<FireStore>(
+                              builder: (context, firesore, child) {
+                            return FutureBuilder(
+                                future: firesore
+                                    .fetchProductByVendorType("Management"),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return firesore
+                                          .productsortedbyVendorTypeList.isEmpty
+                                      ? const Center(
+                                          child: Text("No Data"),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(10.0),
                                           //
                                           //
                                           //
-                                          //************** Title text **************
-                                          Text(
-                                            "hhhh",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                          child: GridView.builder(
+                                            //Physics added to scroll whole page without grid scroll
+                                            gridDelegate:
+                                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                              maxCrossAxisExtent: 220,
+                                              childAspectRatio: 2 / 2.3,
+                                              crossAxisSpacing: 30,
+                                              mainAxisSpacing: 20,
+                                            ),
+                                            itemCount: firesore
+                                                .productsortedbyVendorTypeList
+                                                .length,
+                                            //
+                                            //
+                                            //
+                                            //************* built column as the item builder and wrapped
+                                            // in inkwell to give on tap function **********************
+                                            itemBuilder: (context, index) =>
+                                                InkWell(
+                                              onTap: () async {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => DetailsPage(
+                                                        productModel: firesore
+                                                                .productsortedbyVendorTypeList[
+                                                            index]),
+                                                  ),
+                                                );
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  //
+                                                  //
+                                                  //
+                                                  //************** Inside the column we added container to hold the image *************
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 110,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              firesore
+                                                                  .productsortedbyVendorTypeList[
+                                                                      index]
+                                                                  .img_url!)),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                  ),
+                                                  //
+                                                  //
+                                                  //
+                                                  //*************** and added a column for adding texts and price of product **************
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        //
+                                                        //
+                                                        //
+                                                        //************** Title text **************
+                                                        Text(
+                                                          firesore
+                                                              .productsortedbyVendorTypeList[
+                                                                  index]
+                                                              .product_category,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                        //************ Price text *************
+                                                        Text(
+                                                          firesore
+                                                              .productsortedbyVendorTypeList[
+                                                                  index]
+                                                              .product_prize
+                                                              .toDouble()
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.orange,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  //
+                                                  //
+                                                  //
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                          //
-                                          //
-                                          //
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          //
-                                          //
-                                          //
-                                          //************ Price text *************
-                                          Text(
-                                            "80000",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.orange,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          //
-                                          //
-                                          //
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                        );
+                                });
+                          }),
                           //
                           //
                           //
                           //// 2- Second tab bar view *******************************************************************
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            //
-                            //
-                            //
-                            child: GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              //Physics added to scroll whole page without grid scroll
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 220,
-                                childAspectRatio: 2 / 2.3,
-                                crossAxisSpacing: 30,
-                                mainAxisSpacing: 20,
-                              ),
-                              itemCount: 15,
-                              //
-                              //
-                              //
-                              //************* built column as the item builder and wrapped
-                              // in inkwell to give on tap function **********************
-                              itemBuilder: (context, index) => InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const DetailsPage(),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //
-                                    //
-                                    //
-                                    //************** Inside the column we added container to hold the image *************
-                                    Container(
-                                      width: double.infinity,
-                                      height: 110,
-                                      decoration: BoxDecoration(
-                                        image: const DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              "assets/images/img1.png"),
-                                        ),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                    //*************** and added a column for adding texts and price of product **************
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                          Consumer<FireStore>(
+                              builder: (context, firesore, child) {
+                            return FutureBuilder(
+                                future: firesore
+                                    .fetchProductByVendorType("Product Seller"),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return firesore
+                                          .productsortedbyVendorTypeList.isEmpty
+                                      ? const Center(
+                                          child: Text("No Data"),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(10.0),
                                           //
                                           //
                                           //
-                                          //************** Title text **************
-                                          Text(
-                                            "hhhh",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                          child: GridView.builder(
+                                            //Physics added to scroll whole page without grid scroll
+                                            gridDelegate:
+                                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                              maxCrossAxisExtent: 220,
+                                              childAspectRatio: 2 / 2.3,
+                                              crossAxisSpacing: 30,
+                                              mainAxisSpacing: 20,
+                                            ),
+                                            itemCount: firesore
+                                                .productsortedbyVendorTypeList
+                                                .length,
+                                            //
+                                            //
+                                            //
+                                            //************* built column as the item builder and wrapped
+                                            // in inkwell to give on tap function **********************
+                                            itemBuilder: (context, index) =>
+                                                InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => DetailsPage(
+                                                        productModel: firesore
+                                                                .productsortedbyVendorTypeList[
+                                                            index]),
+                                                  ),
+                                                );
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  //
+                                                  //
+                                                  //
+                                                  //************** Inside the column we added container to hold the image *************
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 110,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              firesore
+                                                                  .productsortedbyVendorTypeList[
+                                                                      index]
+                                                                  .img_url!)),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                  ),
+                                                  //
+                                                  //
+                                                  //
+                                                  //*************** and added a column for adding texts and price of product **************
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        //
+                                                        //
+                                                        //
+                                                        //************** Title text **************
+                                                        Text(
+                                                          firesore
+                                                              .productsortedbyVendorTypeList[
+                                                                  index]
+                                                              .product_category,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                        //************ Price text *************
+                                                        Text(
+                                                          firesore
+                                                              .productsortedbyVendorTypeList[
+                                                                  index]
+                                                              .product_prize
+                                                              .toDouble()
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.orange,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  //
+                                                  //
+                                                  //
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                          //
-                                          //
-                                          //
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          //
-                                          //
-                                          //
-                                          //************ Price text *************
-                                          Text(
-                                            "80000",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.orange,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          //
-                                          //
-                                          //
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                        );
+                                });
+                          }),
                           //
                           //
                           //
                           //// 3- third tab bar view *******************************************************************
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            //
-                            //
-                            //
-                            child: GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              //Physics added to scroll whole page without grid scroll
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 220,
-                                childAspectRatio: 2 / 2.3,
-                                crossAxisSpacing: 30,
-                                mainAxisSpacing: 20,
-                              ),
-                              itemCount: 15,
-                              //
-                              //
-                              //
-                              //************* built column as the item builder and wrapped
-                              // in inkwell to give on tap function **********************
-                              itemBuilder: (context, index) => InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const DetailsPage(),
-                                    ),
-                                  );
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    //
-                                    //
-                                    //
-                                    //************** Inside the column we added container to hold the image *************
-                                    Container(
-                                      width: double.infinity,
-                                      height: 110,
-                                      decoration: BoxDecoration(
-                                        image: const DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              "assets/images/img1.png"),
-                                        ),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                    //*************** and added a column for adding texts and price of product **************
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
+                          Consumer<FireStore>(
+                              builder: (context, firesore, child) {
+                            return FutureBuilder(
+                                future: firesore
+                                    .fetchProductByVendorType("Food Caterer"),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return firesore
+                                          .productsortedbyVendorTypeList.isEmpty
+                                      ? const Center(
+                                          child: Text("No Data"),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(10.0),
                                           //
                                           //
                                           //
-                                          //************** Title text **************
-                                          Text(
-                                            "hhhh",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
+                                          child: GridView.builder(
+                                            //Physics added to scroll whole page without grid scroll
+                                            gridDelegate:
+                                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                              maxCrossAxisExtent: 220,
+                                              childAspectRatio: 2 / 2.3,
+                                              crossAxisSpacing: 30,
+                                              mainAxisSpacing: 20,
+                                            ),
+                                            itemCount: firesore
+                                                .productsortedbyVendorTypeList
+                                                .length,
+                                            //
+                                            //
+                                            //
+                                            //************* built column as the item builder and wrapped
+                                            // in inkwell to give on tap function **********************
+                                            itemBuilder: (context, index) =>
+                                                InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => DetailsPage(
+                                                        productModel: firesore
+                                                                .productsortedbyVendorTypeList[
+                                                            index]),
+                                                  ),
+                                                );
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  //
+                                                  //
+                                                  //
+                                                  //************** Inside the column we added container to hold the image *************
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 110,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                          fit: BoxFit.cover,
+                                                          image: NetworkImage(
+                                                              firesore
+                                                                  .productsortedbyVendorTypeList[
+                                                                      index]
+                                                                  .img_url!)),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                    ),
+                                                  ),
+                                                  //
+                                                  //
+                                                  //
+                                                  //*************** and added a column for adding texts and price of product **************
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        //
+                                                        //
+                                                        //
+                                                        //************** Title text **************
+                                                        Text(
+                                                          firesore
+                                                              .productsortedbyVendorTypeList[
+                                                                  index]
+                                                              .product_category,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                        //************ Price text *************
+                                                        Text(
+                                                          firesore
+                                                              .productsortedbyVendorTypeList[
+                                                                  index]
+                                                              .product_prize
+                                                              .toDouble()
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 15,
+                                                            color:
+                                                                Colors.orange,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        //
+                                                        //
+                                                        //
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  //
+                                                  //
+                                                  //
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                          //
-                                          //
-                                          //
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          //
-                                          //
-                                          //
-                                          //************ Price text *************
-                                          Text(
-                                            "80000",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.orange,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          //
-                                          //
-                                          //
-                                        ],
-                                      ),
-                                    ),
-                                    //
-                                    //
-                                    //
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                        );
+                                });
+                          }),
                           //
                           //
                           //
@@ -554,7 +691,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   //*******The function which the images of carousel images are send and return from here ***********//
   Widget _imageView(String image) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.asset(image, fit: BoxFit.cover),

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:evento/firebase_auth.dart';
+import 'package:evento/pages/firebase_auth.dart';
 import 'package:evento/pages/forgotpassword.dart';
 import 'package:evento/pages/user_pages/usersignUp.dart';
 import 'package:evento/pages/vendor_pages/vendorlogin.dart';
@@ -24,8 +24,11 @@ class _LoginPageState extends State<LoginPage> {
 
   late DocumentSnapshot documentSnapshot;
 
+  BackendController backendController = BackendController();
+
   @override
   Widget build(BuildContext context) {
+    print("L O G I N P A G E");
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -183,7 +186,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: () async {
                           if (formkey.currentState!.validate()) {
-                            await login(email.text, password.text, context);
+                            // await backendController.login(
+                            //
+                            // backendController.userLogin(email.text,
+                            //     password.text, context, 'user', BottomBar());
+                            backendController.loginn(
+                                email.text, password.text, context, 0);
                           }
                         },
                         child: const Text('Login'),
@@ -289,27 +297,35 @@ class _LoginPageState extends State<LoginPage> {
                     //
                     //
                     //******************* Text to signup *****************
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: "Don't have an account ?",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          TextSpan(
-                            text: "  Sign Up",
-                            style: const TextStyle(color: Colors.blue),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                launch(Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignUpPage(),
-                                  ),
-                                ) as String);
-                              },
-                          ),
-                        ],
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignUpPage(),
+                        ));
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: "Don't have an account ?",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: "  Sign Up",
+                              style: const TextStyle(color: Colors.blue),
+
+                              // recognizer: TapGestureRecognizer()
+                              //   ..onTap = () {
+                              //     launch(Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //         builder: (context) => const SignUpPage(),
+                              //       ),
+                              //     ) as String);
+                              // },
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     //

@@ -1,7 +1,8 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -26,6 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 20.0,
             ),
+
+            ///////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////
+
+            ///////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////
             imageFile == null
                 ? Image.asset(
                     'assets/images/people.png',
@@ -33,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 300.0,
                   )
                 : ClipRRect(
-                    borderRadius: BorderRadius.circular(150.0),
+                    borderRadius: BorderRadius.circular(20),
                     child: Image.file(
                       imageFile!,
                       height: 300.0,
@@ -46,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ElevatedButton(
               onPressed: () async {
                 showImagePicker(context);
+
                 // Map<Permission, PermissionStatus> statuses = await [
                 //   Permission.storage,
                 //   Permission.camera,
@@ -89,8 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(
                         child: InkWell(
-                      child: Column(
-                        children: const [
+                      child: const Column(
+                        children: [
                           Icon(
                             Icons.image,
                             size: 60.0,
@@ -110,9 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
                     Expanded(
                         child: InkWell(
-                      child: SizedBox(
+                      child: const SizedBox(
                         child: Column(
-                          children: const [
+                          children: [
                             Icon(
                               Icons.camera_alt,
                               size: 60.0,
@@ -157,53 +165,112 @@ class _HomeScreenState extends State<HomeScreen> {
         .pickImage(source: ImageSource.camera, imageQuality: 50)
         .then((value) {
       if (value != null) {
-        // imageCache.clear();
-        // setState(() {
-        //   imageFile = File(value.path);
-        // });
-        _cropImage(File(value.path));
+        imageCache.clear();
+        setState(() {
+          imageFile = File(value.path);
+        });
+        // _cropImage(File(value.path));
       }
     });
   }
 
-  _cropImage(File imgFile) async {
-    final croppedFile = await ImageCropper().cropImage(
-        sourcePath: imgFile.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
-              ]
-            : [
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio5x3,
-                CropAspectRatioPreset.ratio5x4,
-                CropAspectRatioPreset.ratio7x5,
-                CropAspectRatioPreset.ratio16x9
-              ],
-        uiSettings: [
-          AndroidUiSettings(
-              toolbarTitle: "Image Cropper",
-              toolbarColor: Colors.deepOrange,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false),
-          IOSUiSettings(
-            title: "Image Cropper",
-          )
-        ]);
-    if (croppedFile != null) {
-      imageCache.clear();
-      setState(() {
-        imageFile = File(croppedFile.path);
-      });
-      // reload();
+  // _cropImage(File imgFile) async {
+  //   final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: imgFile.path,
+  //       aspectRatioPresets: Platform.isAndroid
+  //           ? [
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ]
+  //           : [
+  //               CropAspectRatioPreset.original,
+  //               CropAspectRatioPreset.square,
+  //               CropAspectRatioPreset.ratio3x2,
+  //               CropAspectRatioPreset.ratio4x3,
+  //               CropAspectRatioPreset.ratio5x3,
+  //               CropAspectRatioPreset.ratio5x4,
+  //               CropAspectRatioPreset.ratio7x5,
+  //               CropAspectRatioPreset.ratio16x9
+  //             ],
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //             toolbarTitle: "Image Cropper",
+  //             toolbarColor: Colors.deepOrange,
+  //             toolbarWidgetColor: Colors.white,
+  //             initAspectRatio: CropAspectRatioPreset.original,
+  //             lockAspectRatio: false),
+  //         IOSUiSettings(
+  //           title: "Image Cropper",
+  //         )
+  //       ]);
+  //   if (croppedFile != null) {
+  //     imageCache.clear();
+  //     setState(() {
+  //       imageFile = File(croppedFile.path);
+  //     });
+  //     // reload();
+  //   }
+  // }
+  Future<void> uploadImage(pickedFile) async {
+    try {
+      if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+        firebase_storage.Reference reference =
+            firebase_storage.FirebaseStorage.instance.ref().child(
+                '${FirebaseAuth.instance.currentUser!.uid}/Product_image/$fileName');
+        await reference.putFile(imageFile);
+
+        // Get the download URL of the uploaded image.
+        String downloadURL = await reference.getDownloadURL();
+        print('Image uploaded: $downloadURL');
+      } else {
+        // User canceled the image picking.
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
     }
   }
 }
+
+// Future<String> storeImagetoStorge(String ref, File file) async {
+//   SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
+//   UploadTask uploadTask =
+//       firebaseStorage.ref().child(ref).putFile(file, metadata);
+//   TaskSnapshot snapshot = await uploadTask;
+//   String downloadURL = await snapshot.ref.getDownloadURL();
+//   log(downloadURL);
+//   // notifyListeners();
+//   return downloadURL;
+// }
+
+//////////////////////////////////-----Source----////////////////////////////////////////////
+// Future<void> uploadImage() async {
+//   try {
+//     final pickedFile =
+//     await ImagePicker().pickImage(source: ImageSource.gallery);
+//
+//     if (pickedFile != null) {
+//       File imageFile = File(pickedFile.path);
+//       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+//
+//       firebase_storage.Reference reference =
+//       firebase_storage.FirebaseStorage.instance.ref().child(
+//           '${FirebaseAuth.instance.currentUser!.uid}/Product_image/$fileName');
+//       await reference.putFile(imageFile);
+//
+//       // Get the download URL of the uploaded image.
+//       String downloadURL = await reference.getDownloadURL();
+//       print('Image uploaded: $downloadURL');
+//     } else {
+//       // User canceled the image picking.
+//     }
+//   } catch (e) {
+//     print('Error uploading image: $e');
+//   }
+// }
+//////////////////////////////////////////////////////////////////////////////

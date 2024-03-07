@@ -1,4 +1,4 @@
-import 'package:evento/firebase_auth.dart';
+import 'package:evento/pages/firebase_auth.dart';
 import 'package:evento/pages/vendor_pages/vendorsignUp.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,8 @@ class _VendorloginPageState extends State<VendorloginPage> {
 
   bool value = false;
   bool obscureText = true;
+
+  BackendController backendController = BackendController();
 
   @override
   Widget build(BuildContext context) {
@@ -177,8 +179,16 @@ class _VendorloginPageState extends State<VendorloginPage> {
                         ),
                         onPressed: () async {
                           if (formkey.currentState!.validate()) {
-                            await Vendorlogin(
-                                email.text, password.text, context);
+                            // await backendController.Vendorlogin(
+                            //     email.text, password.text, context);
+                            // await backendController.userLogin(
+                            //     email.text,
+                            //     password.text,
+                            //     context,
+                            //     'management',
+                            //     BottomBarvd());
+                            await backendController.loginn(
+                                email.text, password.text, context, 1);
                           }
                         },
                         child: const Text('Login'),
