@@ -9,10 +9,12 @@ class VendorRegModel {
   String state;
   String userName;
   String address;
+  String image;
 
   VendorRegModel({
     this.userId,
     required this.address,
+    required this.image,
     required this.city,
     required this.state,
     required this.userName,
@@ -25,7 +27,8 @@ class VendorRegModel {
 
   Map<String, dynamic> toMap(uid) => {
         "regId": uid,
-        "address":address,
+        "address": address,
+        "image":image,
         "city": city,
         "state": state,
         "userName": userName,
@@ -38,7 +41,8 @@ class VendorRegModel {
 
   factory VendorRegModel.fromMap(Map<String, dynamic> json) => VendorRegModel(
         type: json["type"],
-        address:json["address"],
+        image: json["image"],
+        address: json["address"],
         userName: json["userName"],
         city: json["city"],
         state: json["state"],

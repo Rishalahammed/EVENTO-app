@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:evento/pages/firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -262,39 +265,42 @@ class _EditProfileState extends State<EditProfile> {
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SizedBox(
-          height: 40,
-          width: MediaQuery.of(context).size.width,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              foregroundColor: Colors.white,
-              disabledForegroundColor: Colors.grey,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+      bottomNavigationBar: Consumer<FireStore>(builder: (context, fire, child) {
+        return Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SizedBox(
+            height: 40,
+            width: MediaQuery.of(context).size.width,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+                disabledForegroundColor: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
+              onPressed: () async {
+                if (formkey.currentState!.validate()) {
+                  await fire.fetchCurrentUserDetailData(
+                      "user", FirebaseAuth.instance.currentUser!.uid);
+                  fire.listen();
+                }
+                Navigator.of(context).pop();
+              },
+              child: const Text('Submit'),
             ),
-            onPressed: () {
-              if (formkey.currentState!.validate()) {
-                print(editcity);
-                print(editstate);
-                print(editusername);
-              }
-            },
-            child: const Text('Submit'),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
-  //
-  //
-  //
-  //////////////////////////////////////////////////////////////////////////////////////////////////
-  //Function for image picking
+//
+//
+//
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//Function for image picking
   final picker = ImagePicker();
 
   void showImagePicker(BuildContext context) {
@@ -376,10 +382,10 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  //
-  //
-  //
-  //Function of picking image from gallery
+//
+//
+//
+//Function of picking image from gallery
   _imgFromGallery() async {
     await picker.pickImage(source: ImageSource.gallery, imageQuality: 50).then(
       (value) {
@@ -388,6 +394,10 @@ class _EditProfileState extends State<EditProfile> {
           setState(
             () {
               imageFile = File(value.path);
+              uploadImage(imageFile, context).then((value) {
+                Provider.of<FireStore>(context, listen: false)
+                    .edituserProfileImage(value);
+              });
             },
           );
         }
@@ -395,10 +405,10 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  //
-  //
-  //
-  //Function of picking from camera
+//
+//
+//
+//Function of picking from camera
   _imgFromCamera() async {
     await picker.pickImage(source: ImageSource.camera, imageQuality: 50).then(
       (value) {
@@ -407,10 +417,51 @@ class _EditProfileState extends State<EditProfile> {
           setState(
             () {
               imageFile = File(value.path);
+              uploadImage(imageFile, context).then((value) {
+                Provider.of<FireStore>(context, listen: false)
+                    .edituserProfileImage(value);
+              });
             },
           );
         }
       },
     );
+  }
+
+  Future<String?> uploadImage(pickedFile, context) async {
+    //
+    //
+    // final vendor = db.collection("management");
+    // final product = vendor
+    //     .doc(FirebaseAuth.instance.currentUser!.uid)
+    //     .collection("products")
+    //     .doc();
+    // final productId = product.id;
+    //
+    //
+    String? downloadURL;
+    try {
+      if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        SettableMetadata metadata = SettableMetadata(contentType: "image/jpeg");
+        Reference reference = firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child(
+                '${FirebaseAuth.instance.currentUser!.uid}/userProfile/$fileName');
+        await reference.putFile(imageFile, metadata);
+
+        // Get the download URL of the uploaded image.
+        downloadURL = await reference.getDownloadURL();
+        print('Image uploaded: $downloadURL');
+
+        return downloadURL;
+      } else {
+        // User canceled the image picking.
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+    return downloadURL;
   }
 }

@@ -115,12 +115,14 @@ class _ListPageState extends State<ListPage> {
                               InkWell(
                                 onTap: () {
                                   //============================C O M M E N T E D
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => const DetailsPage(),
-                                  //   ),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DetailsPage(
+                                          productModel:
+                                              data[index].productModel),
+                                    ),
+                                  );
                                 },
                                 child: Row(
                                   children: [

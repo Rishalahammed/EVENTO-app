@@ -61,10 +61,18 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 110,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage("assets/images/people.png"),
-                                ),
+                                image: fires.currentUserDetailModel!.imgUrl
+                                        .isNotEmpty
+                                    ? DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(fires
+                                            .currentUserDetailModel!.imgUrl),
+                                      )
+                                    : DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: AssetImage(
+                                            "assets/images/people.png"),
+                                      ),
                               ),
                             ),
                           ),
@@ -164,29 +172,29 @@ class _ProfilePageState extends State<ProfilePage> {
                             //
                             //
                             //
-                            const SizedBox(
-                              height: 15,
-                            ),
+                            // const SizedBox(
+                            //   height: 15,
+                            // ),
+                            // //
                             //
                             //
-                            //
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const BookingsPage(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                "Bookings & Orders",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black54),
-                              ),
-                            ),
+                            // TextButton(
+                            //   onPressed: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) => const BookingsPage(),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: const Text(
+                            //     "Bookings & Orders",
+                            //     style: TextStyle(
+                            //         fontSize: 20,
+                            //         fontWeight: FontWeight.w600,
+                            //         color: Colors.black54),
+                            //   ),
+                            // ),
                             //
                             //
                             //

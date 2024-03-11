@@ -117,16 +117,16 @@ class _DetailsPageState extends State<DetailsPage> {
                         autoPlayInterval: 3000,
                         isLoop: true,
                         children: [
-                          Image.asset(
-                            'assets/images/img1.png',
+                          Image.network(
+                            widget.productModel!.img_url!,
                             fit: BoxFit.cover,
                           ),
-                          Image.asset(
-                            'assets/images/img2.jpg',
+                          Image.network(
+                            widget.productModel!.img_url!,
                             fit: BoxFit.cover,
                           ),
-                          Image.asset(
-                            'assets/images/img3.jpg',
+                          Image.network(
+                            widget.productModel!.img_url!,
                             fit: BoxFit.cover,
                           ),
                         ],
@@ -156,8 +156,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               //**************** Profile image container *****************
                               CircleAvatar(
                                 radius: 40,
-                                backgroundImage:
-                                    NetworkImage(widget.productModel!.img_url!),
+                                // backgroundImage: NetworkImage(""),
                               ),
                               //
                               //

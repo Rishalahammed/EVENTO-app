@@ -55,7 +55,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
       body: Consumer<FireStore>(builder: (context, firestore, child) {
         return FutureBuilder(
             future: firestore.fetchCurrentUserDetailData(
-                "All-Vendor", FirebaseAuth.instance.currentUser!.uid),
+                "All-Vendor", FirebaseAuth.instance.currentUser!.uid,),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -79,13 +79,17 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                         //
                         //
                         //
-                        const Positioned(
+                        Positioned(
                           bottom: -50,
-                          child: CircleAvatar(
-                            radius: 60,
-                            backgroundImage:
-                                AssetImage("assets/images/people.png"),
-                          ),
+                          child: firestore.currentvendorModel!.image.isEmpty
+                              ? CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage:
+                                      AssetImage("assets/images/people.png"))
+                              : CircleAvatar(
+                                  radius: 60,
+                                  backgroundImage: NetworkImage(
+                                      firestore.currentvendorModel!.image)),
                         ),
                       ],
                     ),
@@ -97,19 +101,19 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                       padding: const EdgeInsets.only(left: 5, right: 10),
                       child: Row(
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const EnquiryPage()),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.assignment_outlined,
-                              size: 30,
-                            ),
-                          ),
+                          // IconButton(
+                          //   onPressed: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) => const EnquiryPage()),
+                          //     );
+                          //   },
+                          //   icon: const Icon(
+                          //     Icons.assignment_outlined,
+                          //     size: 30,
+                          //   ),
+                          // ),
                           //
                           //
                           //
@@ -175,26 +179,26 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                               //
                               //
                               //***************** First item in the menu *****************
-                              PopupMenuItem(
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const VendorbookingsPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Booking & Orders',
-                                    style: TextStyle(
-                                        color: Colors.black45,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
+                              // PopupMenuItem(
+                              //   child: TextButton(
+                              //     onPressed: () {
+                              //       Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //           builder: (context) =>
+                              //               const VendorbookingsPage(),
+                              //         ),
+                              //       );
+                              //     },
+                              //     child: const Text(
+                              //       'Booking & Orders',
+                              //       style: TextStyle(
+                              //           color: Colors.black45,
+                              //           fontSize: 15,
+                              //           fontWeight: FontWeight.bold),
+                              //     ),
+                              //   ),
+                              // ),
                               //
                               //
                               //
@@ -440,7 +444,8 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                               VendordetailsPage(productModel: data[index]),
+                                              VendordetailsPage(
+                                                  productModel: data[index]),
                                         ),
                                       );
                                     },

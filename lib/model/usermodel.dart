@@ -3,9 +3,11 @@ class UserModel {
   String? userId;
   String userName;
   String userEmail;
+  String imgUrl;
 
   UserModel({
     this.userId,
+    required this.imgUrl,
     required this.userName,
     required this.userEmail,
   });
@@ -14,10 +16,12 @@ class UserModel {
         "UserId": uid,
         "Username": userName,
         "email": userEmail,
+        "imgUrl":imgUrl
       };
 
   factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
         userName: json["Username"],
         userEmail: json["email"],
+        imgUrl:json["imgUrl"]
       );
 }

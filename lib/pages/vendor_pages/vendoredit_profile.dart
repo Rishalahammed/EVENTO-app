@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:evento/pages/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../user_pages/userprofile_page.dart';
 // import 'package:project_0/pages/user_pages/userprofile_page.dart';
 
 class VendoreditProfile extends StatefulWidget {
-  
   const VendoreditProfile({super.key});
 
   @override
@@ -52,7 +56,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
             Navigator.pop(
               context,
               MaterialPageRoute(
-                builder: (context) => ProfilePage(),
+                builder: (context) => const ProfilePage(),
               ),
             );
           },
@@ -125,14 +129,24 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                 //
                 //
                 //*************** Image holding container *****************
-                Container(
-                  height: 110,
-                  width: 110,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage("assets/images/people.png"),
+                InkWell(
+                  onTap: () {
+                    showImagePicker(context);
+                  },
+                  child: Container(
+                    height: 110,
+                    width: 110,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: imageFile == null
+                          ? const DecorationImage(
+                              fit: BoxFit.cover,
+                              // ignore: unnecessary_null_comparison
+                              image: AssetImage("assets/images/people.png"))
+                          : DecorationImage(
+                              fit: BoxFit.cover,
+                              // ignore: unnecessary_null_comparison
+                              image: FileImage(imageFile!)),
                     ),
                   ),
                 ),
@@ -218,7 +232,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                         labelText: provider!.email,
                         labelStyle:
                             const TextStyle(fontWeight: FontWeight.w600),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide:
                               BorderSide(width: 1.5, color: Colors.blue),
                         ),
@@ -412,7 +426,9 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
               if (formkey.currentState!.validate()) {
                 Provider.of<FireStore>(context, listen: false)
                     .fetchCurrentUserDetailData(
-                        "All-Vendor", FirebaseAuth.instance.currentUser!.uid);
+                  "All-Vendor",
+                  FirebaseAuth.instance.currentUser!.uid,
+                );
                 Navigator.of(context).pop(true);
               }
             },
@@ -422,4 +438,167 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
       ),
     );
   }
+
+  final picker = ImagePicker();
+
+  void showImagePicker(BuildContext context) {
+    //
+    //
+    //Bottom sheet for choosing the way of picking
+    showModalBottomSheet(
+      context: context,
+      builder: (builder) {
+        return Card(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 5.2,
+            margin: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //
+                //
+                //
+                Expanded(
+                  child: InkWell(
+                    child: const Column(
+                      children: [
+                        Icon(
+                          Icons.image,
+                          size: 60.0,
+                        ),
+                        SizedBox(height: 12.0),
+                        Text(
+                          "Gallery",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      _imgFromGallery();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                //
+                //
+                //
+                Expanded(
+                  child: InkWell(
+                    child: const SizedBox(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            size: 60.0,
+                          ),
+                          SizedBox(height: 12.0),
+                          Text(
+                            "Camera",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                //
+                //
+                //
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  File? imageFile;
+//
+//
+//
+//Function of picking image from gallery
+  _imgFromGallery() async {
+    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50).then(
+      (value) {
+        if (value != null) {
+          imageCache.clear();
+          setState(
+            () {
+              imageFile = File(value.path);
+              uploadImage(imageFile, context).then((value) {
+                Provider.of<FireStore>(context, listen: false)
+                    .editVendorProfileImage(value);
+              });
+            },
+          );
+        }
+      },
+    );
+  }
+
+//
+//
+//
+//Function of picking from camera
+  _imgFromCamera() async {
+    await picker.pickImage(source: ImageSource.camera, imageQuality: 50).then(
+      (value) {
+        if (value != null) {
+          imageCache.clear();
+          setState(
+            () {
+              imageFile = File(value.path);
+              uploadImage(imageFile, context).then((value) {
+                Provider.of<FireStore>(context, listen: false)
+                    .editVendorProfileImage(value);
+              });
+            },
+          );
+        }
+      },
+    );
+  }
+}
+
+Future<String?> uploadImage(pickedFile, context) async {
+  //
+  //
+  // final vendor = db.collection("management");
+  // final product = vendor
+  //     .doc(FirebaseAuth.instance.currentUser!.uid)
+  //     .collection("products")
+  //     .doc();
+  // final productId = product.id;
+  //
+  //
+  String? downloadURL;
+  try {
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      SettableMetadata metadata = SettableMetadata(contentType: "image/jpeg");
+      Reference reference = firebase_storage.FirebaseStorage.instance.ref().child(
+          '${FirebaseAuth.instance.currentUser!.uid}/vendorprofile/$fileName');
+      await reference.putFile(imageFile, metadata);
+
+      // Get the download URL of the uploaded image.
+      downloadURL = await reference.getDownloadURL();
+      print('Image uploaded: $downloadURL');
+
+      return downloadURL;
+    } else {
+      // User canceled the image picking.
+    }
+  } catch (e) {
+    print('Error uploading image: $e');
+  }
+  return downloadURL;
 }

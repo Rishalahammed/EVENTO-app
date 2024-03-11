@@ -35,8 +35,10 @@ class BackendController {
           .then(
         (value) {
           return firestoreobj
-              .addUserdetails(value.user!.uid,
-                  UserModel(userName: username, userEmail: emailAddress))
+              .addUserdetails(
+                  value.user!.uid,
+                  UserModel(
+                      userName: username, userEmail: emailAddress, imgUrl: ""))
               .then(
             (value) {
               const type = "user";
@@ -74,8 +76,16 @@ class BackendController {
   /////////////////////////////////////////////////////////////////////////////////////////////
   //********************* Management signup authentication and data saving ********************
   //
-  vendorSignUp(companyname, emailAddress, mobile, whatsapp, address, password,
-      context, vendorType,) async {
+  vendorSignUp(
+    companyname,
+    emailAddress,
+    mobile,
+    whatsapp,
+    address,
+    password,
+    context,
+    vendorType,
+  ) async {
     try {
       final credential = await auth
           .createUserWithEmailAndPassword(
@@ -91,7 +101,8 @@ class BackendController {
               .addNewVandor(
                   value.user!.uid,
                   VendorRegModel(
-address: address,
+                      image: "",
+                      address: address,
                       city: "",
                       state: "",
                       userName: "",
@@ -263,6 +274,11 @@ address: address,
   //     print(e);
   //   }
   // }
+  Future changePAssword() async {
+    await auth.sendPasswordResetEmail(
+        email: FirebaseAuth.instance.currentUser!.email.toString());
+    return 0;
+  }
 
   successSnackBar(context) {
     return ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

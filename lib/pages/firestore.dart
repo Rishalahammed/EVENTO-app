@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evento/model/addTolistModel.dart';
 import 'package:evento/model/allusermodel.dart';
 import 'package:evento/model/vendor_reg_model.dart';
-import 'package:evento/model/managementmodel.dart';
 import 'package:evento/model/productmodel.dart';
-import 'package:evento/model/productsellermodel.dart';
 import 'package:evento/model/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -312,7 +310,7 @@ class FireStore with ChangeNotifier {
 
   UserModel? currentUserDetailModel;
   VendorRegModel? currentvendorModel;
-  fetchCurrentUserDetailData(
+  Future fetchCurrentUserDetailData(
     collection,
     uid,
   ) async {
@@ -325,6 +323,10 @@ class FireStore with ChangeNotifier {
         currentvendorModel = VendorRegModel.fromMap(snapshot.data()!);
       }
     }
+  }
+
+  listen() {
+    notifyListeners();
   }
 
   editUserName(newName) {
@@ -349,5 +351,19 @@ class FireStore with ChangeNotifier {
     if (docs.exists) {
       selectedVendor = VendorRegModel.fromMap(docs.data()!);
     }
+  }
+
+  editVendorProfileImage(imageUrl) async {
+    db
+        .collection("All-Vendor")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"image": imageUrl});
+  }
+
+  edituserProfileImage(imageUrl) async {
+    db
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({"imgUrl": imageUrl});
   }
 }
