@@ -3,7 +3,6 @@ import 'package:evento/pages/user_pages/productdetails_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../product_list.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});

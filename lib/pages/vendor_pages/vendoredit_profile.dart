@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:evento/pages/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../user_pages/userprofile_page.dart';
 // import 'package:project_0/pages/user_pages/userprofile_page.dart';
@@ -19,12 +19,14 @@ class VendoreditProfile extends StatefulWidget {
 }
 
 class _VendoreditProfileState extends State<VendoreditProfile> {
-  var editusername = TextEditingController();
-  var editemail = TextEditingController();
-  var editcity = TextEditingController();
-  var editstate = TextEditingController();
-  var editmobile = TextEditingController();
-  var editwhatsapp = TextEditingController();
+  var editcompname = TextEditingController();
+  var editvdemail = TextEditingController();
+  var editvdcity = TextEditingController();
+  var editvdstate = TextEditingController();
+  var editvdmobile = TextEditingController();
+  var editvdwhatsapp = TextEditingController();
+  var editvdadrress = TextEditingController();
+
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   bool value = false;
@@ -139,7 +141,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       image: imageFile == null
-                          ? const DecorationImage(
+                          ? DecorationImage(
                               fit: BoxFit.cover,
                               // ignore: unnecessary_null_comparison
                               image: AssetImage("assets/images/people.png"))
@@ -191,9 +193,12 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     //
                     //******************** Text field of username ************
                     TextFormField(
-                      controller: editusername,
-                      decoration: const InputDecoration(
-                        labelText: 'User Name',
+                      controller: editcompname,
+                      decoration: InputDecoration(
+                        labelText: 'Company Name',
+                        hintText: Provider.of<FireStore>(context, listen: false)
+                            .currentvendorModel!
+                            .companyName,
                         labelStyle: TextStyle(fontWeight: FontWeight.w600),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
@@ -201,7 +206,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                         ),
                       ),
                       onFieldSubmitted: (value) {
-                        FireStore().editVendordetail("userName", value);
+                        FireStore().editVendordetail("CompanyName", value);
                       },
                       onSaved: (String? value) {
                         // This optional block of code can be used to run
@@ -226,7 +231,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     //
                     //******************** Text field of email *****************
                     TextFormField(
-                      controller: editemail,
+                      controller: editvdemail,
                       decoration: InputDecoration(
                         enabled: false,
                         labelText: provider!.email,
@@ -270,9 +275,13 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                             onFieldSubmitted: (value) {
                               FireStore().editVendordetail("city", value);
                             },
-                            controller: editcity,
-                            decoration: const InputDecoration(
+                            controller: editvdcity,
+                            decoration: InputDecoration(
                               labelText: "City",
+                              hintText:
+                                  Provider.of<FireStore>(context, listen: false)
+                                      .currentvendorModel!
+                                      .city,
                               labelStyle:
                                   TextStyle(fontWeight: FontWeight.w600),
                               focusedBorder: UnderlineInputBorder(
@@ -298,9 +307,13 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                             onFieldSubmitted: (value) {
                               FireStore().editVendordetail("state", value);
                             },
-                            controller: editstate,
-                            decoration: const InputDecoration(
+                            controller: editvdstate,
+                            decoration: InputDecoration(
                               labelText: "State",
+                              hintText:
+                                  Provider.of<FireStore>(context, listen: false)
+                                      .currentvendorModel!
+                                      .state,
                               labelStyle:
                                   TextStyle(fontWeight: FontWeight.w600),
                               focusedBorder: UnderlineInputBorder(
@@ -331,9 +344,14 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                       onFieldSubmitted: (value) {
                         FireStore().editVendordetail("Mobile Number", value);
                       },
-                      controller: editmobile,
-                      decoration: const InputDecoration(
+                      controller: editvdmobile,
+                      keyboardType: TextInputType.phone,
+                      maxLength: 10,
+                      decoration: InputDecoration(
                         labelText: 'Mobile',
+                        hintText: Provider.of<FireStore>(context, listen: false)
+                            .currentvendorModel!
+                            .mobNo,
                         labelStyle: TextStyle(fontWeight: FontWeight.w600),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
@@ -365,9 +383,14 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                       onFieldSubmitted: (value) {
                         FireStore().editVendordetail("Whatsapp Number", value);
                       },
-                      controller: editwhatsapp,
-                      decoration: const InputDecoration(
+                      controller: editvdwhatsapp,
+                      keyboardType: TextInputType.phone,
+                      maxLength: 10,
+                      decoration: InputDecoration(
                         labelText: 'Whatsapp',
+                        hintText: Provider.of<FireStore>(context, listen: false)
+                            .currentvendorModel!
+                            .whastappNo,
                         labelStyle: TextStyle(fontWeight: FontWeight.w600),
                         focusedBorder: UnderlineInputBorder(
                           borderSide:
@@ -390,14 +413,44 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
                     //
                     //
                     const SizedBox(
-                      height: 30,
+                      height: 15,
                     ),
                     //
                     //
                     //
                     //
-
+                    TextFormField(
+                      controller: editvdadrress,
+                      decoration: InputDecoration(
+                        labelText: 'Adrress',
+                        hintText: Provider.of<FireStore>(context, listen: false)
+                            .currentvendorModel!
+                            .address,
+                        labelStyle: TextStyle(fontWeight: FontWeight.w600),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1.5, color: Colors.blue),
+                        ),
+                      ),
+                      onFieldSubmitted: (value) {
+                        FireStore().editVendordetail("address", value);
+                      },
+                      onSaved: (String? value) {
+                        // This optional block of code can be used to run
+                        // code when the user saves the form.
+                      },
+                      validator: (String? value) {
+                        return (value != null && value.contains('@'))
+                            ? 'Do not use the @ char.'
+                            : null;
+                      },
+                    ),
                     //
+                    //
+                    //
+                    const SizedBox(
+                      height: 30,
+                    ),
                     //
                     //
                     //
@@ -533,6 +586,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
           setState(
             () {
               imageFile = File(value.path);
+              showTimedPopup(context);
               uploadImage(imageFile, context).then((value) {
                 Provider.of<FireStore>(context, listen: false)
                     .editVendorProfileImage(value);
@@ -556,6 +610,7 @@ class _VendoreditProfileState extends State<VendoreditProfile> {
           setState(
             () {
               imageFile = File(value.path);
+              showTimedPopup(context);
               uploadImage(imageFile, context).then((value) {
                 Provider.of<FireStore>(context, listen: false)
                     .editVendorProfileImage(value);
@@ -601,4 +656,38 @@ Future<String?> uploadImage(pickedFile, context) async {
     print('Error uploading image: $e');
   }
   return downloadURL;
+}
+
+//
+//
+//
+////////-- Function of alert box which last for 5 seconds for image upload --/////////
+void showTimedPopup(BuildContext context) {
+  // Show dialog
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      // Custom dialog content
+      return AlertDialog(
+        title: Text(
+          'Image Uploading..',
+          style: TextStyle(
+              fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Colors.teal.shade50,
+        shadowColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(width: 1, color: Colors.white),
+        ),
+        // content: Text('This pop-up will disappear in 8 seconds.'),
+      );
+    },
+  );
+  // Close dialog after 5 seconds
+  Future.delayed(Duration(seconds: 5), () {
+    Navigator.of(context).pop(); // Close the dialog
+  });
 }

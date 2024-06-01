@@ -1,7 +1,5 @@
 import 'package:evento/pages/firestore.dart';
 import 'package:evento/splash_screen.dart';
-import 'package:evento/pages/user_pages/login.dart';
-import 'package:evento/pages/verificationpage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider<FireStore>(create: (_)=>FireStore())],
-      child: const MaterialApp(debugShowCheckedModeBanner: false, home: Splash()));
+        providers: [
+          ChangeNotifierProvider<FireStore>(create: (_) => FireStore())
+        ],
+        child: const MaterialApp(
+            debugShowCheckedModeBanner: false, home: Splash()));
   }
 }

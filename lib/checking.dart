@@ -1,276 +1,384 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  File? imageFile;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Select & Crop Image'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20.0,
-            ),
-
-            ///////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////
-
-            ///////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////
-            imageFile == null
-                ? Image.asset(
-                    'assets/images/people.png',
-                    height: 300.0,
-                    width: 300.0,
-                  )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.file(
-                      imageFile!,
-                      height: 300.0,
-                      width: 300.0,
-                      fit: BoxFit.cover,
-                    )),
-            const SizedBox(
-              height: 20.0,
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                showImagePicker(context);
-
-                // Map<Permission, PermissionStatus> statuses = await [
-                //   Permission.storage,
-                //   Permission.camera,
-                // ].request();
-                // if (statuses[Permission.storage]!.isGranted &&
-                //     statuses[Permission.camera]!.isGranted) {
-                //   showImagePicker(context);
-                // } else {
-                //   print('no permission provided');
-                // }
-              },
-              child: Text('Select Image'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  //
-  //
-  //
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-
-  final picker = ImagePicker();
-
-  void showImagePicker(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (builder) {
-          return Card(
-            child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 5.2,
-                margin: const EdgeInsets.only(top: 8.0),
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                        child: InkWell(
-                      child: const Column(
-                        children: [
-                          Icon(
-                            Icons.image,
-                            size: 60.0,
-                          ),
-                          SizedBox(height: 12.0),
-                          Text(
-                            "Gallery",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        _imgFromGallery();
-                        Navigator.pop(context);
-                      },
-                    )),
-                    Expanded(
-                        child: InkWell(
-                      child: const SizedBox(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.camera_alt,
-                              size: 60.0,
-                            ),
-                            SizedBox(height: 12.0),
-                            Text(
-                              "Camera",
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.black),
-                            )
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        _imgFromCamera();
-                        Navigator.pop(context);
-                      },
-                    ))
-                  ],
-                )),
-          );
-        });
-  }
-
-  _imgFromGallery() async {
-    await picker
-        .pickImage(source: ImageSource.gallery, imageQuality: 50)
-        .then((value) {
-      if (value != null) {
-        imageCache.clear();
-        setState(() {
-          imageFile = File(value.path);
-        });
-        // _cropImage(File(value.path));
-      }
-    });
-  }
-
-  _imgFromCamera() async {
-    await picker
-        .pickImage(source: ImageSource.camera, imageQuality: 50)
-        .then((value) {
-      if (value != null) {
-        imageCache.clear();
-        setState(() {
-          imageFile = File(value.path);
-        });
-        // _cropImage(File(value.path));
-      }
-    });
-  }
-
-  // _cropImage(File imgFile) async {
-  //   final croppedFile = await ImageCropper().cropImage(
-  //       sourcePath: imgFile.path,
-  //       aspectRatioPresets: Platform.isAndroid
-  //           ? [
-  //               CropAspectRatioPreset.square,
-  //               CropAspectRatioPreset.ratio3x2,
-  //               CropAspectRatioPreset.original,
-  //               CropAspectRatioPreset.ratio4x3,
-  //               CropAspectRatioPreset.ratio16x9
-  //             ]
-  //           : [
-  //               CropAspectRatioPreset.original,
-  //               CropAspectRatioPreset.square,
-  //               CropAspectRatioPreset.ratio3x2,
-  //               CropAspectRatioPreset.ratio4x3,
-  //               CropAspectRatioPreset.ratio5x3,
-  //               CropAspectRatioPreset.ratio5x4,
-  //               CropAspectRatioPreset.ratio7x5,
-  //               CropAspectRatioPreset.ratio16x9
-  //             ],
-  //       uiSettings: [
-  //         AndroidUiSettings(
-  //             toolbarTitle: "Image Cropper",
-  //             toolbarColor: Colors.deepOrange,
-  //             toolbarWidgetColor: Colors.white,
-  //             initAspectRatio: CropAspectRatioPreset.original,
-  //             lockAspectRatio: false),
-  //         IOSUiSettings(
-  //           title: "Image Cropper",
-  //         )
-  //       ]);
-  //   if (croppedFile != null) {
-  //     imageCache.clear();
-  //     setState(() {
-  //       imageFile = File(croppedFile.path);
-  //     });
-  //     // reload();
-  //   }
-  // }
-  Future<void> uploadImage(pickedFile) async {
-    try {
-      if (pickedFile != null) {
-        File imageFile = File(pickedFile.path);
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-
-        firebase_storage.Reference reference =
-            firebase_storage.FirebaseStorage.instance.ref().child(
-                '${FirebaseAuth.instance.currentUser!.uid}/Product_image/$fileName');
-        await reference.putFile(imageFile);
-
-        // Get the download URL of the uploaded image.
-        String downloadURL = await reference.getDownloadURL();
-        print('Image uploaded: $downloadURL');
-      } else {
-        // User canceled the image picking.
-      }
-    } catch (e) {
-      print('Error uploading image: $e');
-    }
-  }
-}
-
-// Future<String> storeImagetoStorge(String ref, File file) async {
-//   SettableMetadata metadata = SettableMetadata(contentType: 'image/jpeg');
-//   UploadTask uploadTask =
-//       firebaseStorage.ref().child(ref).putFile(file, metadata);
-//   TaskSnapshot snapshot = await uploadTask;
-//   String downloadURL = await snapshot.ref.getDownloadURL();
-//   log(downloadURL);
-//   // notifyListeners();
-//   return downloadURL;
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import 'package:provider/provider.dart';
+// import 'package:trade_hub/model/usermodel.dart';
+// import 'package:trade_hub/view/Modules/user/navigation%20bar.dart';
+// import 'package:trade_hub/viewmodel/controller.dart';
+// import 'package:trade_hub/viewmodel/firestore.dart';
+//
+// class Editprofileee extends StatefulWidget {
+//   const Editprofileee({super.key});
+//
+//   @override
+//   State<Editprofileee> createState() => _EditprofileeeState();
 // }
-
-//////////////////////////////////-----Source----////////////////////////////////////////////
-// Future<void> uploadImage() async {
-//   try {
-//     final pickedFile =
-//     await ImagePicker().pickImage(source: ImageSource.gallery);
 //
-//     if (pickedFile != null) {
-//       File imageFile = File(pickedFile.path);
-//       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+// final selectedDate = DateTime.now();
 //
-//       firebase_storage.Reference reference =
-//       firebase_storage.FirebaseStorage.instance.ref().child(
-//           '${FirebaseAuth.instance.currentUser!.uid}/Product_image/$fileName');
-//       await reference.putFile(imageFile);
+// class _EditprofileeeState extends State<Editprofileee> {
+//   @override
+//   Widget build(BuildContext context) {
+//     final hight = MediaQuery.of(context).size.height;
+//     final width = MediaQuery.of(context).size.width;
+//     return Scaffold(
+//       body: SafeArea(
+//         child: Consumer<Firestore>(builder: (context, firestore, child) {
+//           final data = firestore.userModel;
+//           TextEditingController name = TextEditingController(text: data?.name);
+//           TextEditingController dateofBirth =
+//               TextEditingController(text: data?.dateOfBirth);
+//           TextEditingController country =
+//               TextEditingController(text: data?.country);
+//           TextEditingController address =
+//               TextEditingController(text: data?.deliveryAddress);
+//           return ListView(
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.only(top: 20),
+//                 child: Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     Text(
+//                       'Edit Profile',
+//                       style: GoogleFonts.lexendDeca(
+//                           fontWeight: FontWeight.w400,
+//                           fontSize: 27,
+//                           color: const Color(0xffB7A6FC)),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               Consumer2<Controller, Firestore>(
+//                   builder: (context, controller, firestore, child) {
+//                 return FutureBuilder(
+//                     future: firestore.fetchCurrentUser(
+//                         FirebaseAuth.instance.currentUser!.uid),
+//                     builder: (context, snapshot) {
+//                       if (snapshot.connectionState == ConnectionState.active) {
+//                         const Center(
+//                           child: CircularProgressIndicator(),
+//                         );
+//                       }
+//                       return Padding(
+//                         padding: const EdgeInsets.only(top: 30),
+//                         child: Stack(
+//                           alignment: Alignment.center,
+//                           children: [
+//                             firestore.userModel?.profileImage == "" ||
+//                                     firestore.userModel?.profileImage == null
+//                                 ? ClipRRect(
+//                                     borderRadius: BorderRadius.circular(100),
+//                                     child: SizedBox(
+//                                         height: 110,
+//                                         width: 110,
+//                                         child: Image.asset(
+//                                           'assets/noImage.png',
+//                                           fit: BoxFit.fill,
+//                                         )),
+//                                   )
+//                                 : ClipRRect(
+//                                     borderRadius: BorderRadius.circular(100),
+//                                     child: SizedBox(
+//                                       height: 110,
+//                                       width: 110,
+//                                       child: Image.network(
+//                                         "${firestore.userModel?.profileImage}",
+//                                         fit: BoxFit.fill,
+//                                         // scale: 30,
+//                                       ),
+//                                     ),
+//                                   ),
+//                             Padding(
+//                               padding: const EdgeInsets.only(left: 80, top: 60),
+//                               child: InkWell(
+//                                 onTap: () async {
+//                                   await controller.addProfileImage();
+//                                 },
+//                                 child: Image.asset('assets/Group 12557.png'),
+//                               ),
+//                             )
+//                           ],
+//                         ),
+//                       );
+//                     });
+//               }),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text(
+//                     "${data?.name}",
+//                     style: GoogleFonts.dmSans(
+//                         fontWeight: FontWeight.w700,
+//                         fontSize: 18,
+//                         color: const Color(0xff000000)),
+//                   ),
+//                 ],
+//               ),
 //
-//       // Get the download URL of the uploaded image.
-//       String downloadURL = await reference.getDownloadURL();
-//       print('Image uploaded: $downloadURL');
-//     } else {
-//       // User canceled the image picking.
-//     }
-//   } catch (e) {
-//     print('Error uploading image: $e');
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: [
+//                   Text(
+//                     "${data?.email}",
+//                     style: GoogleFonts.dmSans(
+//                         fontWeight: FontWeight.w400,
+//                         fontSize: 10,
+//                         color: const Color(0xffFFAB2D)),
+//                   ),
+//                 ],
+//               ),
+//
+//               //=====================================================================================================================
+//
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 17, top: 20),
+//                 child: Text(
+//                   'Name',
+//                   style: GoogleFonts.inter(
+//                       fontWeight: FontWeight.w700,
+//                       fontSize: 15,
+//                       color: const Color(0xff1D1E20)),
+//                 ),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 13, right: 13, top: 5),
+//                 child: Container(
+//                   width: double.infinity,
+//                   height: 44,
+//                   decoration: BoxDecoration(
+//                       border: Border.all(color: const Color(0xff544C4C99)),
+//                       borderRadius: BorderRadius.circular(6)),
+//                   child: TextFormField(
+//                     controller: name,
+//                     decoration: InputDecoration(
+//                         border: InputBorder.none,
+//                         hintText: "  ${data?.name}",
+//                         hintStyle: const TextStyle(
+//                             color: Color(0xff544C4C),
+//                             fontWeight: FontWeight.w500,
+//                             fontSize: 14)),
+//                   ),
+//                 ),
+//               ),
+//
+//               //==========================================================================================
+//
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 17, top: 10),
+//                 child: Text(
+//                   'Email',
+//                   style: GoogleFonts.inter(
+//                       fontWeight: FontWeight.w700,
+//                       fontSize: 15,
+//                       color: const Color(0xff1D1E20)),
+//                 ),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 13, right: 13, top: 5),
+//                 child: Container(
+//                   width: double.infinity,
+//                   height: 44,
+//                   decoration: BoxDecoration(
+//                       border: Border.all(color: const Color(0xff544C4C99)),
+//                       borderRadius: BorderRadius.circular(6)),
+//                   child: TextFormField(
+//                     enabled: false,
+//                     decoration: InputDecoration(
+//                         border: InputBorder.none,
+//                         hintText: "  ${data?.email}",
+//                         hintStyle: const TextStyle(
+//                             color: Colors.grey,
+//                             fontWeight: FontWeight.w500,
+//                             fontSize: 14)),
+//                   ),
+//                 ),
+//               ),
+//
+//               //==========================================================================================
+//
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 17, top: 10),
+//                 child: Text(
+//                   'Date of birth',
+//                   style: GoogleFonts.inter(
+//                       fontWeight: FontWeight.w700,
+//                       fontSize: 15,
+//                       color: const Color(0xff1D1E20)),
+//                 ),
+//               ),
+//               Consumer<Controller>(builder: (context, controller, child) {
+//                 return SizedBox(
+//                   width: MediaQuery.of(context).size.width,
+//                   height: 44,
+//                   child: ListTile(
+//
+//                       // title: Text("${data?.dateOfBirth}"),
+//                       title: TextFormField(
+//                         decoration: InputDecoration(
+//                           enabled: true,
+//                           disabledBorder: OutlineInputBorder(
+//                               borderSide:
+//                                   BorderSide(color: const Color(0xff544C4C99)),
+//                               borderRadius: BorderRadius.circular(6)),
+//                         ),
+//                         controller: dateofBirth,
+//                         enabled: false,
+//                       ),
+//                       trailing: IconButton(
+//                         onPressed: () async {
+//                           final picked = await showDatePicker(
+//                               context: context,
+//                               initialDate: selectedDate,
+//                               firstDate: DateTime(1900),
+//                               lastDate: DateTime(2050));
+//                           if (picked != null && picked != selectedDate) {
+//                             final year = picked.year;
+//                             final month = picked.month;
+//                             final day = picked.day;
+//
+//                             controller.pickedDate = "$day/$month/$year";
+//                             dateofBirth.text = "${controller.pickedDate}";
+//
+//                             print(controller.pickedDate);
+//                           }
+//                         },
+//                         icon: const Icon(
+//                           Icons.keyboard_arrow_down,
+//                           size: 30,
+//                         ),
+//                       )),
+//                 );
+//               }),
+//
+//               //==========================================================================================
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 17, top: 10),
+//                 child: Text(
+//                   'Country/region',
+//                   style: GoogleFonts.inter(
+//                       fontWeight: FontWeight.w700,
+//                       fontSize: 15,
+//                       color: const Color(0xff1D1E20)),
+//                 ),
+//               ),
+//               Consumer<Controller>(builder: (context, controller, child) {
+//                 return SizedBox(
+//                   width: MediaQuery.of(context).size.width,
+//                   height: 44,
+//                   child: ListTile(
+//
+//                       // title: Text("${data?.dateOfBirth}"),
+//                       title: TextFormField(
+//                         decoration: InputDecoration(
+//                           enabled: true,
+//                           disabledBorder: OutlineInputBorder(
+//                               borderSide:
+//                                   BorderSide(color: const Color(0xff544C4C99)),
+//                               borderRadius: BorderRadius.circular(6)),
+//                         ),
+//                         controller: country,
+//                         enabled: false,
+//                       ),
+//                       trailing: IconButton(
+//                         onPressed: () async {
+//                           controller.showCountries(context);
+//                           country.text = "${controller.selectedCountry.name}";
+//                         },
+//                         icon: const Icon(
+//                           Icons.keyboard_arrow_down,
+//                           size: 30,
+//                         ),
+//                       )),
+//                 );
+//               }),
+//
+//               //==========================================================================================
+//
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 17, top: 10),
+//                 child: Text(
+//                   'Address',
+//                   style: GoogleFonts.inter(
+//                       fontWeight: FontWeight.w700,
+//                       fontSize: 15,
+//                       color: const Color(0xff1D1E20)),
+//                 ),
+//               ),
+//               Padding(
+//                 padding: const EdgeInsets.only(left: 13, right: 13, top: 5),
+//                 child: Container(
+//                   width: double.infinity,
+//                   height: 44,
+//                   decoration: BoxDecoration(
+//                       border: Border.all(color: const Color(0xff544C4C99)),
+//                       borderRadius: BorderRadius.circular(6)),
+//                   child: TextFormField(
+//                     controller: address,
+//                     decoration: InputDecoration(
+//                         border: InputBorder.none,
+//                         hintText: "  ${data?.deliveryAddress}",
+//                         hintStyle: const TextStyle(
+//                             color: Color(0xff544C4C),
+//                             fontWeight: FontWeight.w500,
+//                             fontSize: 14)),
+//                   ),
+//                 ),
+//               ),
+//
+//               //==========================================================================================
+//
+//               Consumer<Firestore>(builder: (context, firestore, child) {
+//                 return Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     Padding(
+//                       padding: const EdgeInsets.all(20.0),
+//                       child: InkWell(
+//                         onTap: () {
+//                           firestore.updateCurrentUserData(
+//                               FirebaseAuth.instance.currentUser?.uid,
+//                               UserModel(
+//                                   country: country.text,
+//                                   dateOfBirth: dateofBirth.text,
+//                                   deliveryAddress: address.text,
+//                                   email: "${data?.email}",
+//                                   name: name.text,
+//                                   userID: "${data?.userID}",
+//                                   profileImage: ""));
+//                           Navigator.pushReplacement(
+//                               context,
+//                               MaterialPageRoute(
+//                                   builder: (context) => const Navigationnn()));
+//                         },
+//                         child: Container(
+//                           width: 147,
+//                           height: 50,
+//                           decoration: BoxDecoration(
+//                               color: const Color(0xff7A00E6),
+//                               borderRadius: BorderRadius.circular(36)),
+//                           child: Center(
+//                             child: Text(
+//                               'Save Changes',
+//                               style: GoogleFonts.inter(
+//                                   fontWeight: FontWeight.w700,
+//                                   fontSize: 15,
+//                                   color: const Color(0xffffffff)),
+//                             ),
+//                           ),
+//                         ),
+//                         //
+//                         //
+//                         //
+//                       ),
+//                     )
+//                   ],
+//                 );
+//               })
+//             ],
+//           );
+//         }),
+//       ),
+//     );
 //   }
 // }
-//////////////////////////////////////////////////////////////////////////////

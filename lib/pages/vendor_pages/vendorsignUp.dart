@@ -17,6 +17,8 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
   TextEditingController mobile = TextEditingController();
   TextEditingController whatsapp = TextEditingController();
   TextEditingController address = TextEditingController();
+  TextEditingController city = TextEditingController();
+  TextEditingController state = TextEditingController();
   final formkey = GlobalKey<FormState>();
 
   bool value = false;
@@ -327,6 +329,124 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                 //
                 //
                 //
+                TextFormField(
+                  controller: city,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                  cursorColor: Colors.teal,
+                  cursorHeight: 20,
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      borderSide: BorderSide(
+                        width: 1,
+                      ),
+                    ),
+                    label: Text(
+                      'City',
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.teal,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.teal,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please Enter Your City';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                //
+                //
+                //
+                const SizedBox(
+                  height: 20,
+                ),
+                //
+                //
+                //
+                TextFormField(
+                  controller: state,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                  cursorColor: Colors.teal,
+                  cursorHeight: 20,
+                  keyboardType: TextInputType.text,
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      borderSide: BorderSide(
+                        width: 1,
+                      ),
+                    ),
+                    label: Text(
+                      'State',
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.teal,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.teal,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please Enter Your State';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                //
+                //
+                //
+                const SizedBox(
+                  height: 20,
+                ),
+                //
+                //
+                //
                 SizedBox(
                   height: 100,
                   child: TextFormField(
@@ -604,6 +724,8 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                                           whatsapp.text.trim(),
                                           address.text.trim(),
                                           password.text.trim(),
+                                          city.text.trim(),
+                                          state.text.trim(),
                                           context,
                                           "Management");
                                     },
@@ -629,6 +751,8 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                                           whatsapp.text.trim(),
                                           address.text.trim(),
                                           password.text.trim(),
+                                          city.text.trim(),
+                                          state.text.trim(),
                                           context,
                                           "Product Seller");
                                     },
@@ -662,6 +786,8 @@ class _VendorsignUpPageState extends State<VendorsignUpPage> {
                                           whatsapp.text.trim(),
                                           address.text.trim(),
                                           password.text.trim(),
+                                          city.text.trim(),
+                                          state.text.trim(),
                                           context,
                                           "Food Caterer");
                                     },

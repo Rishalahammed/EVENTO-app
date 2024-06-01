@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evento/model/allusermodel.dart';
-import 'package:evento/model/vendor_reg_model.dart';
-import 'package:evento/model/managementmodel.dart';
-import 'package:evento/model/productsellermodel.dart';
 import 'package:evento/model/usermodel.dart';
+import 'package:evento/model/vendor_reg_model.dart';
 import 'package:evento/pages/bottom_bar.dart';
 import 'package:evento/pages/firestore.dart';
 import 'package:evento/pages/user_pages/login.dart';
@@ -83,6 +81,8 @@ class BackendController {
     whatsapp,
     address,
     password,
+    city,
+    state,
     context,
     vendorType,
   ) async {
@@ -103,9 +103,8 @@ class BackendController {
                   VendorRegModel(
                       image: "",
                       address: address,
-                      city: "",
-                      state: "",
-                      userName: "",
+                      city: city,
+                      state: state,
                       type: vendorType,
                       companyName: companyname,
                       email: emailAddress,

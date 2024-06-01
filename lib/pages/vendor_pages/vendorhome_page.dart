@@ -208,9 +208,9 @@ class _VendordhomePageState extends State<VendordhomePage>
                             //
                             //// 1- First tab bar view *******************************************************************
                             Consumer<FireStore>(
-                                builder: (context, firesore, child) {
+                                builder: (context, firestore, child) {
                               return FutureBuilder(
-                                  future: firesore
+                                  future: firestore
                                       .fetchProductByVendorType("Management"),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState ==
@@ -219,7 +219,7 @@ class _VendordhomePageState extends State<VendordhomePage>
                                         child: CircularProgressIndicator(),
                                       );
                                     }
-                                    return firesore
+                                    return firestore
                                             .productsortedbyVendorTypeList
                                             .isEmpty
                                         ? const Center(
@@ -239,7 +239,7 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                 crossAxisSpacing: 30,
                                                 mainAxisSpacing: 20,
                                               ),
-                                              itemCount: firesore
+                                              itemCount: firestore
                                                   .productsortedbyVendorTypeList
                                                   .length,
                                               //
@@ -257,7 +257,8 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                       builder: (context) =>
                                                           VendordetailsPage(
                                                               productModel:
-                                                                  firesore.productsortedbyVendorTypeList[
+                                                                  firestore
+                                                                          .productsortedbyVendorTypeList[
                                                                       index]),
                                                     ),
                                                   );
@@ -277,7 +278,7 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                         image: DecorationImage(
                                                             fit: BoxFit.cover,
                                                             image: NetworkImage(
-                                                                firesore
+                                                                firestore
                                                                     .productsortedbyVendorTypeList[
                                                                         index]
                                                                     .img_url!)),
@@ -303,10 +304,10 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                           //
                                                           //************** Title text **************
                                                           Text(
-                                                            firesore
+                                                            firestore
                                                                 .productsortedbyVendorTypeList[
                                                                     index]
-                                                                .product_category,
+                                                                .product_description,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.black,
@@ -326,7 +327,7 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                           //
                                                           //************ Price text *************
                                                           Text(
-                                                            firesore
+                                                            firestore
                                                                 .productsortedbyVendorTypeList[
                                                                     index]
                                                                 .product_prize
@@ -460,7 +461,7 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                             firesore
                                                                 .productsortedbyVendorTypeList[
                                                                     index]
-                                                                .product_category,
+                                                                .product_description,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.black,
@@ -614,7 +615,7 @@ class _VendordhomePageState extends State<VendordhomePage>
                                                             firesore
                                                                 .productsortedbyVendorTypeList[
                                                                     index]
-                                                                .product_category,
+                                                                .product_description,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.black,

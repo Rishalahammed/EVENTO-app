@@ -1,5 +1,4 @@
 import 'package:evento/pages/firebase_auth.dart';
-import 'package:evento/pages/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:project_0/pages/user_pages/userprofile_page.dart';

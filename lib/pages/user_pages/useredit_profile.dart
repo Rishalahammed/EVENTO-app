@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:evento/pages/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -24,24 +24,12 @@ class _EditProfileState extends State<EditProfile> {
   var editwhatsapp = TextEditingController();
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
-  // late PickedFile _imageFile;
-  // final ImagePicker _picker = ImagePicker();
-
   bool value = false;
   File? imageFile;
-  // Uint8List? _image;
-  //
-  // void selectImage() async {
-  //   Uint8List img = await pickImage(ImageSource.gallery);
-  //   setState(() {
-  //     _image = img;
-  //   });
-  // }
   //
   //
   //
-  //
-  //********************* Body *************************
+  //***********************************************************
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +108,7 @@ class _EditProfileState extends State<EditProfile> {
                           height: 120,
                           width: 120,
                           decoration: BoxDecoration(
-                            image: const DecorationImage(
+                            image: DecorationImage(
                               image: AssetImage('assets/images/people.png'),
                             ),
                             borderRadius: BorderRadius.circular(20),
@@ -296,11 +284,14 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////// FUNCTIONS //////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 //
 //
-//////////////////////////////////////////////////////////////////////////////////////////////////
-//Function for image picking
+////////////////////--- Function for image picking ---////////////////////
+//
   final picker = ImagePicker();
 
   void showImagePicker(BuildContext context) {
@@ -385,7 +376,7 @@ class _EditProfileState extends State<EditProfile> {
 //
 //
 //
-//Function of picking image from gallery
+////////////////-- Function of picking image from gallery --///////////////////
   _imgFromGallery() async {
     await picker.pickImage(source: ImageSource.gallery, imageQuality: 50).then(
       (value) {
@@ -394,6 +385,7 @@ class _EditProfileState extends State<EditProfile> {
           setState(
             () {
               imageFile = File(value.path);
+              showTimedPopup(context);
               uploadImage(imageFile, context).then((value) {
                 Provider.of<FireStore>(context, listen: false)
                     .edituserProfileImage(value);
@@ -408,7 +400,7 @@ class _EditProfileState extends State<EditProfile> {
 //
 //
 //
-//Function of picking from camera
+////////////////-- Function of picking from camera --///////////////////
   _imgFromCamera() async {
     await picker.pickImage(source: ImageSource.camera, imageQuality: 50).then(
       (value) {
@@ -417,6 +409,7 @@ class _EditProfileState extends State<EditProfile> {
           setState(
             () {
               imageFile = File(value.path);
+              showTimedPopup(context);
               uploadImage(imageFile, context).then((value) {
                 Provider.of<FireStore>(context, listen: false)
                     .edituserProfileImage(value);
@@ -428,17 +421,12 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+//
+//
+//
+////////////////-- Function of uploading image to DB and updating --///////////////////
+
   Future<String?> uploadImage(pickedFile, context) async {
-    //
-    //
-    // final vendor = db.collection("management");
-    // final product = vendor
-    //     .doc(FirebaseAuth.instance.currentUser!.uid)
-    //     .collection("products")
-    //     .doc();
-    // final productId = product.id;
-    //
-    //
     String? downloadURL;
     try {
       if (pickedFile != null) {
@@ -464,4 +452,38 @@ class _EditProfileState extends State<EditProfile> {
     }
     return downloadURL;
   }
+}
+
+//
+//
+//
+////////-- Function of alert box which last for 5 seconds for image upload --/////////
+void showTimedPopup(BuildContext context) {
+  // Show dialog
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      // Custom dialog content
+      return AlertDialog(
+        title: Text(
+          'Image Uploading..',
+          style: TextStyle(
+              fontSize: 20, color: Colors.black54, fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Colors.teal.shade50,
+        shadowColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(width: 1, color: Colors.white),
+        ),
+        // content: Text('This pop-up will disappear in 8 seconds.'),
+      );
+    },
+  );
+  // Close dialog after 5 seconds
+  Future.delayed(Duration(seconds: 5), () {
+    Navigator.of(context).pop(); // Close the dialog
+  });
 }

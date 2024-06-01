@@ -210,9 +210,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           //
                           //// 1- First tab bar view *******************************************************************
                           Consumer<FireStore>(
-                              builder: (context, firesore, child) {
+                              builder: (context, firestore, child) {
                             return FutureBuilder(
-                                future: firesore
+                                future: firestore
                                     .fetchProductByVendorType("Management"),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       child: CircularProgressIndicator(),
                                     );
                                   }
-                                  return firesore
+                                  return firestore
                                           .productsortedbyVendorTypeList.isEmpty
                                       ? const Center(
                                           child: Text("No Data"),
@@ -240,7 +240,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                               crossAxisSpacing: 30,
                                               mainAxisSpacing: 20,
                                             ),
-                                            itemCount: firesore
+                                            itemCount: firestore
                                                 .productsortedbyVendorTypeList
                                                 .length,
                                             //
@@ -255,7 +255,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) => DetailsPage(
-                                                        productModel: firesore
+                                                        productModel: firestore
                                                                 .productsortedbyVendorTypeList[
                                                             index]),
                                                   ),
@@ -276,7 +276,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       image: DecorationImage(
                                                           fit: BoxFit.cover,
                                                           image: NetworkImage(
-                                                              firesore
+                                                              firestore
                                                                   .productsortedbyVendorTypeList[
                                                                       index]
                                                                   .img_url!)),
@@ -303,10 +303,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                         //
                                                         //************** Title text **************
                                                         Text(
-                                                          firesore
+                                                          firestore
                                                               .productsortedbyVendorTypeList[
                                                                   index]
-                                                              .product_category,
+                                                              .product_description,
                                                           style:
                                                               const TextStyle(
                                                             color: Colors.black,
@@ -325,7 +325,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                         //
                                                         //************ Price text *************
                                                         Text(
-                                                          firesore
+                                                          firestore
                                                               .productsortedbyVendorTypeList[
                                                                   index]
                                                               .product_prize
@@ -457,7 +457,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                           firesore
                                                               .productsortedbyVendorTypeList[
                                                                   index]
-                                                              .product_category,
+                                                              .product_description,
                                                           style:
                                                               const TextStyle(
                                                             color: Colors.black,
@@ -608,7 +608,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                           firesore
                                                               .productsortedbyVendorTypeList[
                                                                   index]
-                                                              .product_category,
+                                                              .product_description,
                                                           style:
                                                               const TextStyle(
                                                             color: Colors.black,

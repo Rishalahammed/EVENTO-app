@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:evento/pages/about_page.dart';
 import 'package:evento/pages/firebase_auth.dart';
 import 'package:evento/pages/firestore.dart';
-import 'package:evento/splash_screen.dart';
-import 'package:evento/pages/user_pages/bookings_page.dart';
 import 'package:evento/pages/user_pages/useredit_profile.dart';
+import 'package:evento/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,9 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Consumer<FireStore>(builder: (context, fires, child) {
         return FutureBuilder(
             future: fires.fetchCurrentUserDetailData(
-              "user",
-              FirebaseAuth.instance.currentUser!.uid,
-            ),
+                "user", FirebaseAuth.instance.currentUser!.uid),
             builder: (context, snapshpt) {
               if (snapshpt.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -286,7 +284,14 @@ class _ProfilePageState extends State<ProfilePage> {
                             //
                             //
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AboutPage(),
+                                  ),
+                                );
+                              },
                               child: const Text("About",
                                   style: TextStyle(
                                       fontSize: 20,

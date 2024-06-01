@@ -1,12 +1,11 @@
+import 'package:evento/pages/about_page.dart';
 import 'package:evento/pages/firebase_auth.dart';
 import 'package:evento/pages/firestore.dart';
-import 'package:evento/splash_screen.dart';
 import 'package:evento/pages/vendor_pages/vendoraddproduct.dart';
-import 'package:evento/pages/vendor_pages/vendorbookings_page.dart';
 import 'package:evento/pages/vendor_pages/vendorchangepassword_page.dart';
 import 'package:evento/pages/vendor_pages/vendoredit_profile.dart';
-import 'package:evento/pages/vendor_pages/vendorenquiry_page.dart';
 import 'package:evento/pages/vendor_pages/vendorproductdetails_page.dart';
+import 'package:evento/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +54,9 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
       body: Consumer<FireStore>(builder: (context, firestore, child) {
         return FutureBuilder(
             future: firestore.fetchCurrentUserDetailData(
-                "All-Vendor", FirebaseAuth.instance.currentUser!.uid,),
+              "All-Vendor",
+              FirebaseAuth.instance.currentUser!.uid,
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -89,7 +90,8 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                               : CircleAvatar(
                                   radius: 60,
                                   backgroundImage: NetworkImage(
-                                      firestore.currentvendorModel!.image)),
+                                      firestore.currentvendorModel!.image),
+                                ),
                         ),
                       ],
                     ),
@@ -229,7 +231,14 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                               //***************** Third item in the menu *****************
                               PopupMenuItem(
                                 child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const AboutPage(),
+                                      ),
+                                    );
+                                  },
                                   child: const Text(
                                     'About',
                                     style: TextStyle(
@@ -434,7 +443,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                                   gridDelegate:
                                       const SliverGridDelegateWithMaxCrossAxisExtent(
                                           maxCrossAxisExtent: 220,
-                                          childAspectRatio: 2 / 2.5,
+                                          childAspectRatio: 2.1 / 2.5,
                                           crossAxisSpacing: 20,
                                           mainAxisSpacing: 20),
                                   itemCount: data.length,
@@ -452,7 +461,7 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                                     child: Container(
                                       padding: const EdgeInsets.all(5),
                                       decoration: BoxDecoration(
-                                        color: Colors.teal.shade100,
+                                        color: Colors.teal.shade50,
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
                                           width: 2,
@@ -501,7 +510,8 @@ class _VendorprofilePageState extends State<VendorprofilePage> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  data[index].product_category,
+                                                  data[index]
+                                                      .product_description,
                                                   style: const TextStyle(
                                                     color: Colors.black,
                                                     fontWeight: FontWeight.bold,

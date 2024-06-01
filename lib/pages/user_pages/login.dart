@@ -3,7 +3,6 @@ import 'package:evento/pages/firebase_auth.dart';
 import 'package:evento/pages/forgotpassword.dart';
 import 'package:evento/pages/user_pages/usersignUp.dart';
 import 'package:evento/pages/vendor_pages/vendorlogin.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {

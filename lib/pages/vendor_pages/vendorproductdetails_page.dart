@@ -32,7 +32,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
       //
       //
       //
-      //*********** App bar ************
+      //********************* App bar ***********************
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -53,10 +53,10 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
       //
       //******************** Body **********************
       backgroundColor: Colors.white,
-      body: Consumer<FireStore>(builder: (context, firestre, chiuld) {
+      body: Consumer<FireStore>(builder: (context, firestore, child) {
         return FutureBuilder(
-            future:
-                firestre.fetchSelectedVendorById(widget.productModel!.vendorId),
+            future: firestore
+                .fetchSelectedVendorById(widget.productModel!.vendorId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -81,16 +81,16 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                         autoPlayInterval: 3000,
                         isLoop: true,
                         children: [
-                          Image.asset(
-                            'assets/images/img1.png',
+                          Image.network(
+                            widget.productModel!.img_url!,
                             fit: BoxFit.cover,
                           ),
-                          Image.asset(
-                            'assets/images/img2.jpg',
+                          Image.network(
+                            widget.productModel!.img_url!,
                             fit: BoxFit.cover,
                           ),
-                          Image.asset(
-                            'assets/images/img3.jpg',
+                          Image.network(
+                            widget.productModel!.img_url!,
                             fit: BoxFit.cover,
                           ),
                         ],
@@ -102,7 +102,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                     //
                     //********************* Container holding image and details ******************
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(20),
                       color: Colors.teal,
                       height: 220,
                       width: MediaQuery.of(context).size.width,
@@ -120,8 +120,9 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                               //**************** Profile image container *****************
                               CircleAvatar(
                                 radius: 40,
-                                backgroundImage:
-                                    NetworkImage(widget.productModel!.img_url!),
+                                backgroundImage: NetworkImage(
+                                  firestore.selectedVendor!.image,
+                                ),
                               ),
                               //
                               //
@@ -138,7 +139,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    firestre.selectedVendor!.companyName
+                                    firestore.selectedVendor!.companyName
                                         .toUpperCase(),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -216,7 +217,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                           //
                           //
                           const SizedBox(
-                            height: 15,
+                            height: 25,
                           ),
                           //************** Row contains details ****************
                           Row(
@@ -233,14 +234,14 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                                     widget.productModel!.product_description,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: (17),
+                                      fontSize: (18),
                                       color: Colors.white,
                                     ),
                                   ),
                                   //
                                   //
                                   const SizedBox(
-                                    height: 10,
+                                    height: 15,
                                   ),
                                   //
                                   //
@@ -248,7 +249,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                                     '₹ ${widget.productModel!.product_prize}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: (20),
+                                      fontSize: (22),
                                       color: Colors.amber,
                                     ),
                                   ),
@@ -289,88 +290,31 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                           ),
                           //
                           //
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Column(
                               children: [
                                 //
                                 //
                                 //
-                                IntrinsicHeight(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Balloon Decorators',
-                                        style: TextStyle(
-                                          fontSize: (15),
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Category  :  ',
+                                      style: TextStyle(
+                                        fontSize: (18),
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
+                                    ),
+                                    Text(
+                                      widget.productModel!.product_category,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Text(
-                                        'Birthday Party',
-                                        style: TextStyle(
-                                          fontSize: (15),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
-                                      ),
-                                      Text(
-                                        'Name ceremony',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (15),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                //
-                                //
-                                //
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                //
-                                //
-                                //
-                                IntrinsicHeight(
-                                  child: Row(
-                                    children: [
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
-                                      ),
-                                      Text(
-                                        'Baby shower',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (15),
-                                        ),
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
-                                      ),
-                                      Text(
-                                        'Light Decorators',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (15),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                //
-                                //
-                                //
                               ],
                             ),
                           ),
@@ -392,21 +336,20 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                           //
                           //
                           //
-                          //
-                          //
+                          //************** Row contain Location icon and details ****************
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               const Icon(
                                 Icons.location_on,
+                                color: Colors.teal,
                                 size: 30,
                               ),
                               const SizedBox(
                                 width: 10,
                               ),
                               Text(
-                                "${firestre.selectedVendor!.city},${firestre.selectedVendor!.state}\n${firestre.selectedVendor!.address}",
-                                // "${Provider.of<FireStore>(context, listen: false).currentvendorModel!.city},${Provider.of<FireStore>(context, listen: false).currentvendorModel!.state},",
+                                "${firestore.selectedVendor!.city}, ${firestore.selectedVendor!.state}\n${firestore.selectedVendor!.address}",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: (15),
@@ -418,11 +361,12 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                           //
                           //
                           const SizedBox(
-                            height: 30,
+                            height: 35,
                           ),
                           //
                           //
                           //
+                          //************** Available time text and objects ****************
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Column(
@@ -430,7 +374,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                               children: [
                                 Text("Available on -",
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                     )),
                                 Text(
@@ -447,7 +391,7 @@ class _VendordetailsPageState extends State<VendordetailsPage> {
                           //
                           //
                           const SizedBox(
-                            height: 70,
+                            height: 50,
                           ),
                           //
                           //

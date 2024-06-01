@@ -1,4 +1,3 @@
-import 'package:evento/pages/user_pages/productdetails_page.dart';
 import 'package:flutter/material.dart';
 
 import '../product_list.dart';

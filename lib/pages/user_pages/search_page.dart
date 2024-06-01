@@ -3,8 +3,6 @@ import 'package:evento/pages/user_pages/productdetails_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../product_dt.dart';
-
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -193,6 +191,14 @@ class _SearchPageState extends State<SearchPage> {
                                       ),
                                     ),
                                     onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => DetailsPage(
+                                              productModel: firestore
+                                                  .display_list[index]),
+                                        ),
+                                      );
                                       //============================C O M M E N T E D
                                       // Navigator.push(
                                       //   context,

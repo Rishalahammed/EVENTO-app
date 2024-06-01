@@ -1,5 +1,6 @@
 import 'package:evento/model/addTolistModel.dart';
 import 'package:evento/model/productmodel.dart';
+import 'package:evento/model/usermodel.dart';
 import 'package:evento/pages/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -8,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DetailsPage extends StatefulWidget {
   ProductModel? productModel;
+  UserModel? userModel;
   DetailsPage({super.key, required this.productModel});
 
   @override
@@ -157,6 +159,11 @@ class _DetailsPageState extends State<DetailsPage> {
                               CircleAvatar(
                                 radius: 40,
                                 // backgroundImage: NetworkImage(""),
+
+                                backgroundImage: NetworkImage(
+                                  firestre.selectedVendor!.image,
+                                  // fit: BoxFit.cover,
+                                ),
                               ),
                               //
                               //
@@ -270,7 +277,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                       widget.productModel!.product_description,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: (17),
+                                        fontSize: (18),
                                         color: Colors.white,
                                       ),
                                     ),
@@ -278,7 +285,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   //
                                   //
                                   const SizedBox(
-                                    height: 10,
+                                    height: 15,
                                   ),
                                   //
                                   //
@@ -286,7 +293,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                     '₹ ${widget.productModel!.product_prize.toDouble().toString()}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: (20),
+                                      fontSize: (22),
                                       color: Colors.amber,
                                     ),
                                   ),
@@ -301,41 +308,6 @@ class _DetailsPageState extends State<DetailsPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    //
-                                    //
-                                    //
-                                    //****************** Call button ********************
-                                    // SizedBox(
-                                    //   width: 80,
-                                    //   height: 35,
-                                    //   child: ElevatedButton(
-                                    //       onPressed: () {},
-                                    //       style: ButtonStyle(
-                                    //         shape: MaterialStatePropertyAll(
-                                    //           RoundedRectangleBorder(
-                                    //             borderRadius: BorderRadius.circular(10),
-                                    //           ),
-                                    //         ),
-                                    //         foregroundColor:
-                                    //             const MaterialStatePropertyAll(
-                                    //           Colors.white,
-                                    //         ),
-                                    //         backgroundColor: MaterialStateProperty.all(
-                                    //           Colors.black54,
-                                    //         ),
-                                    //       ),
-                                    //       child: const Text(
-                                    //         "Call",
-                                    //         style: TextStyle(
-                                    //             fontSize: 15,
-                                    //             fontWeight: FontWeight.bold),
-                                    //       )),
-                                    // ),
-                                    //
-                                    //
-                                    // const SizedBox(
-                                    //   height: 10,
-                                    // ),
                                     //
                                     //
                                     //
@@ -472,84 +444,30 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                           //
                           //
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Column(
                               children: [
                                 //
                                 //
                                 //
-                                IntrinsicHeight(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Balloon Decorators',
-                                        style: TextStyle(
-                                          fontSize: (15),
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Category  :  ',
+                                      style: TextStyle(
+                                        fontSize: (18),
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
+                                    ),
+                                    Text(
+                                      widget.productModel!.product_category,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Text(
-                                        'Birthday Party',
-                                        style: TextStyle(
-                                          fontSize: (15),
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
-                                      ),
-                                      Text(
-                                        'Name ceremony',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (15),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                //
-                                //
-                                //
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                //
-                                //
-                                //
-                                IntrinsicHeight(
-                                  child: Row(
-                                    children: [
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
-                                      ),
-                                      Text(
-                                        'Baby shower',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (15),
-                                        ),
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        thickness: 2,
-                                      ),
-                                      Text(
-                                        'Light Decorators',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: (15),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 //
                                 //
@@ -582,6 +500,7 @@ class _DetailsPageState extends State<DetailsPage> {
                             children: [
                               const Icon(
                                 Icons.location_on,
+                                color: Colors.teal,
                                 size: 30,
                               ),
                               const SizedBox(
@@ -612,7 +531,7 @@ class _DetailsPageState extends State<DetailsPage> {
                               children: [
                                 Text("Available on -",
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                     )),
                                 Text(

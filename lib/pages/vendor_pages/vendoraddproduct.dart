@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evento/model/productmodel.dart';
-import 'package:evento/pages/bottom_bar.dart';
 import 'package:evento/pages/vdbottom_bar.dart';
-import 'package:evento/pages/vendor_pages/vendorprofile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,12 +22,12 @@ class AddproductPage extends StatefulWidget {
 class _AddproductPageState extends State<AddproductPage> {
   /////////////////////--- Category list ---//////////////////
   final List<String> _categorys = [
-    "Inauguration Events",
-    "Birthday Parties",
-    "pre wedding events",
-    "Inauguration Events",
-    "Birthday Parties ",
-    "pre wedding events"
+    "Event Management",
+    "Event Decorators",
+    "Food Caterers",
+    "Food Makers",
+    "Product Sellers",
+    "Product Rentals"
   ];
 
   ////////////////////---- Controllers of fields ----///////////////////
@@ -258,8 +256,11 @@ class _AddproductPageState extends State<AddproductPage> {
                 height: 160,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black26),
-                    color: Colors.teal.shade50,
+                    border: Border.all(
+                      color: Colors.black26,
+                      width: 2,
+                    ),
+                    // color: Colors.teal.shade50,
                     borderRadius: BorderRadius.circular(10)),
                 //
                 //
@@ -285,7 +286,7 @@ class _AddproductPageState extends State<AddproductPage> {
                     //
                     //
                     const Divider(
-                      thickness: 3,
+                      thickness: 2,
                     ),
                     //
                     //
@@ -317,7 +318,7 @@ class _AddproductPageState extends State<AddproductPage> {
               TextField(
                 controller: _categoryController,
                 decoration: const InputDecoration(
-                  hintText: "  Flower Designs | Bussiness Events |",
+                  hintText: "  Event Management | Food Caterer |",
                 ),
               ),
               //

@@ -3,8 +3,6 @@ import 'package:evento/pages/vendor_pages/vendorproductdetails_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../product_dt.dart';
-
 class VendorsearchPage extends StatefulWidget {
   const VendorsearchPage({super.key});
 
@@ -196,6 +194,15 @@ class _VendorsearchPageState extends State<VendorsearchPage> {
                                         ),
                                       ),
                                       onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                VendordetailsPage(
+                                                    productModel: firestore
+                                                        .display_list[index]),
+                                          ),
+                                        );
                                         //    ----------------------------commented-----------------------
                                         // Navigator.push(
                                         //   context,

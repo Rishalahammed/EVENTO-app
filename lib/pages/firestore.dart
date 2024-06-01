@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evento/model/addTolistModel.dart';
 import 'package:evento/model/allusermodel.dart';
-import 'package:evento/model/vendor_reg_model.dart';
 import 'package:evento/model/productmodel.dart';
 import 'package:evento/model/usermodel.dart';
+import 'package:evento/model/vendor_reg_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -148,6 +148,10 @@ class FireStore with ChangeNotifier {
     }
     print("n");
   }
+  //
+  //
+  //
+  //*************************** Removing products from the list *************************
 
   removeFromList(docId, List<AddToListModel> lists) {
     db
@@ -160,6 +164,9 @@ class FireStore with ChangeNotifier {
     calculateTotal(lists);
     notifyListeners();
   }
+  //
+  //
+  //
   //////////////////////--------------------------------------------------------
   //
   //

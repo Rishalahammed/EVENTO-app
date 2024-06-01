@@ -6,10 +6,8 @@ class AllUserModel {
   AllUserModel({
     required this.email,
     required this.type,
-    
     this.userId,
   });
-
   Map<String, dynamic> toJson(uid) => {
         "userId": uid,
         "email": email,
